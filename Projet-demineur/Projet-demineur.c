@@ -2,11 +2,64 @@
 //
 
 #include <stdio.h>
+#define size 10 + 1
 
 int main()
 {
-    printf ("Hello Worldaaa!\n");
+    int tableau[size][size];
+    
+    int i = 0;
+    int y = 0;
+
+    while (i < size) 
+    {
+        y = 0;
+        while (y < size)
+        {
+            tableau[i][y] =  0;
+            if (i == 0)
+            {
+                tableau[i][y] = y;
+			};
+			if (y == 0)
+			{
+				tableau[i][y] = i;
+			};
+    
+            if (y == size - 1 && i == size - 1)
+            {
+                tableau[i][y] = 00;
+            };
+
+            if (i == 0 && y >= 10 || y == 0 && i >= 10)
+            {
+                printf("  %d ", tableau[i][y]);
+            }               
+            else
+            {
+                printf("  %d  ", tableau[i][y]);
+            };
+
+            
+            y++;
+        };
+        printf("\n");
+        i++;
+    }
+
+    printf("\nhello\n");
+
+    return 0;
 }
+
+int createQuadrillage() 
+{
+
+}
+
+
+
+
 
 // Exécuter le programme : Ctrl+F5 ou menu Déboguer > Exécuter sans débogage
 // Déboguer le programme : F5 ou menu Déboguer > Démarrer le débogage
