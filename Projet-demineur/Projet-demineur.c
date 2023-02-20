@@ -1,12 +1,11 @@
 // Projet-demineur.cpp : Ce fichier contient la fonction 'main'. L'exécution du programme commence et se termine à cet endroit.
 //
 
-#include <iostream>
 #include <stdio.h>
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    printf ("Hello Worldaaa!\n");
 }
 
 // Exécuter le programme : Ctrl+F5 ou menu Déboguer > Exécuter sans débogage
