@@ -2,68 +2,119 @@
 //
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 
-#define size 10 + 1
+#define Ligne 10 + 1
+#define Colonne 10 + 1
+
+
 
 typedef struct Case
 {
-    int number; //chiffre présent dans la case 0 par défaut, -1 pour une bombe
+    int number; //chiffre présent dans la case 0 par défaut, -1 pour une bombe ou nb bombe autour 
     int statut; //statut de la case 0 si pas découvert, 1 si découvert et -1 pour le drapeau
 
 }Case;
 
+void viderBuffer()
+{
+	int c = 0;
+	while (c != '\n' && c != EOF)
+	{
+		c = getchar();
+	}
+}
+
+
+
+void play() {
+    viderBuffer();
+    int ligne = " ";
+    printf("bonsoir michel tu veut jouer quel ligne ?");
+    scanf_s ("%d", ligne);
+    if (ligne <= Ligne - 1 && ligne > 0) {
+        int colonne = " ";
+        printf("Maintenant tu veut jouer quelles colonne");
+        scanf_s("%d", colonne);
+    }
+    else {
+        return play();
+    };
+};
+
 
 int main()
-{
+{   // create grid
+   
     Case odefault = { 0,0 };
 
-    int tableau[size][size];
-    int i = 0;
-    int y = 0;    
+    int nbBombe = round(((Ligne-1) * (Colonne-1))/6);
+    printf("%d\n", nbBombe);
 
-    while (i < size) 
+    int tableau[Ligne][Colonne];
+    int i = 0;
+    int y = 0;
+
+
+    while (i < Ligne)
     {
         y = 0;
-        while (y < size)
+        while (y < Colonne)
         {
             if (i == 0 && y == 0)
             {
-                printf("  ");
+                printf("     ");
             }
-            if (i==0)
+            else if (y == Colonne - 1 && i == 0)
+            {
+                printf("%d", y);
+                printf("\n");
+            }
+            else if (i > 9 && y == 0)
+            {
+                printf("%d  ", i);
+            }
+            else if (y > 9 && i == 0)
+            {
+                printf("%d ", y);
+            }
+            else if (i == 0)
+            {
+                printf("%d  ", y);
+            }
+            else if (y == 0)
+            {
+                printf("%d   ", i);
+            }
             else
             {
                 tableau[i][y] = odefault.number;
-                printf("? ");
-            }
-     
-
-            if (i == 0)
-            {
-                tableau[i][y] = y;
-			};
-			if (y == 0)
-			{
-				tableau[i][y] = i;
-			};
-    
-            if (y == size - 1 && i == size - 1)
-            {
-                tableau[i][y] = odefault.number;
+                printf(" ? ");
             };
-
             y++;
         };
         printf("\n");
         i++;
     }
-
-    printf("\nhello\n");
+    printf("\n");
+    play();
 
     return 0;
-}
+};
 
 
+
+// debut découvre tout ceux de number 0 et le premier ayant un nombre supérieur à 1
+
+//apres découvre le number ou si bombe == perdu
+
+//nb drapeau == nb bombe possibilité retirer drapeau
+
+//quand créa bombe ajout +1 au number des 8 cases autour
+
+// scanf pour savoir si poser drapeau/ découvrir une case
+// scanf pour savoir la position
 
 
 
