@@ -29,33 +29,29 @@ void viderBuffer()
 
 
 void play() {
-    viderBuffer();
-    int ligne = " ";
+    
+    int ligne = ' ';
     printf("bonsoir michel tu veut jouer quel ligne ?");
-    scanf_s ("%d", ligne);
-    if (ligne <= Ligne - 1 && ligne > 0) {
-        int colonne = " ";
-        printf("Maintenant tu veut jouer quelles colonne");
-        scanf_s("%d", colonne);
-    }
-    else {
-        return play();
+    scanf_s ("%d", &ligne);
+    while (ligne > Ligne - 1 && ligne == 0) {
+        viderBuffer();
+        printf("Tu doit choisir un chiffre entre 1 et %d", Ligne);
+        scanf_s("%d", ligne);
     };
+    int colonne = ' ';
+        printf("Maintenant tu veut jouer quelles colonne ?");
+        scanf_s("%d", &colonne);
+        while (colonne <= Colonne - 1 && colonne > 0) {
+			viderBuffer();
+			printf("Tu doit choisir un chiffre entre 1 et %d", Colonne);
+			scanf_s("%d", colonne);
+        };
 };
 
 
-int main()
-{   // create grid
-   
-    Case odefault = { 0,0 };
 
-    int nbBombe = round(((Ligne-1) * (Colonne-1))/6);
-    printf("%d\n", nbBombe);
-
-    int tableau[Ligne][Colonne];
-    int i = 0;
-    int y = 0;
-
+void grid( Case * odefault, int tableauJeu[Ligne][Colonne], char* tableauDefault[Ligne][Colonne], int i, int y)
+{
 
     while (i < Ligne)
     {
@@ -89,8 +85,9 @@ int main()
             }
             else
             {
-                tableau[i][y] = odefault.number;
-                printf(" ? ");
+                tableauJeu[i][y] = odefault -> number;
+                tableauDefault[i][y] = " ? ";
+                printf("%s", tableauDefault[i][y]);
             };
             y++;
         };
@@ -98,11 +95,29 @@ int main()
         i++;
     }
     printf("\n");
+};
+
+
+int main()
+{   // create grid
+   
+    Case odefault = { 0,0 };
+
+    int nbBombe = round(((Ligne - 1) * (Colonne - 1)) / 6);
+    int nbFlag = nbBombe;
+
+    int tableauJeu[Ligne][Colonne];
+    char* tableauDefault[Ligne][Colonne];
+
+    int i = 0;
+    int y = 0;
+
+    grid(&odefault, tableauJeu, tableauDefault, i, y);
+
     play();
 
     return 0;
 };
-
 
 
 // debut découvre tout ceux de number 0 et le premier ayant un nombre supérieur à 1
