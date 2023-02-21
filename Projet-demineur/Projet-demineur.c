@@ -2,21 +2,42 @@
 //
 
 #include <stdio.h>
+
 #define size 10 + 1
+
+typedef struct Case
+{
+    int number; //chiffre présent dans la case 0 par défaut, -1 pour une bombe
+    int statut; //statut de la case 0 si pas découvert, 1 si découvert et -1 pour le drapeau
+
+}Case;
+
 
 int main()
 {
+    Case odefault = { 0,0 };
+
     int tableau[size][size];
-    
     int i = 0;
-    int y = 0;
+    int y = 0;    
 
     while (i < size) 
     {
         y = 0;
         while (y < size)
         {
-            tableau[i][y] =  0;
+            if (i == 0 && y == 0)
+            {
+                printf("  ");
+            }
+            if (i==0)
+            else
+            {
+                tableau[i][y] = odefault.number;
+                printf("? ");
+            }
+     
+
             if (i == 0)
             {
                 tableau[i][y] = y;
@@ -28,19 +49,9 @@ int main()
     
             if (y == size - 1 && i == size - 1)
             {
-                tableau[i][y] = 00;
+                tableau[i][y] = odefault.number;
             };
 
-            if (i == 0 && y >= 10 || y == 0 && i >= 10)
-            {
-                printf("  %d ", tableau[i][y]);
-            }               
-            else
-            {
-                printf("  %d  ", tableau[i][y]);
-            };
-
-            
             y++;
         };
         printf("\n");
@@ -52,13 +63,6 @@ int main()
     return 0;
 }
 
-
-typedef struct Case
-{
-    int number; //chiffre présent dans la case 0 par défaut, -1 pour une bombe
-    int statut; //statut de la case 0 si pas découvert, 1 si découvert et -1 pour le drapeau
-
-}Case;
 
 
 
