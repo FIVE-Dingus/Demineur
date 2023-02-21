@@ -52,10 +52,13 @@ int main()
     return 0;
 }
 
-int createQuadrillage() 
-{
 
-}
+typedef struct Case
+{
+    int number; //chiffre présent dans la case 0 par défaut, -1 pour une bombe
+    int statut; //statut de la case 0 si pas découvert, 1 si découvert et -1 pour le drapeau
+
+}Case;
 
 
 
