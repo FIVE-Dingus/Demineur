@@ -4,9 +4,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <stdlib.h>
 
-#define Ligne 10 + 1
-#define Colonne 10 + 1
+#define Ligne 10 
+#define Colonne 10 
 
 
 
@@ -17,6 +18,17 @@ typedef struct Case
 
 }Case;
 
+int getIndex1D(int i, int j)
+{
+    //permet de récupérer l'indice d'un tableau à 2 dimensions dans un tableau à 1 dimension
+
+    // j = colone
+    // i = ligne
+
+    return i * Ligne + j;
+
+};
+
 void viderBuffer()
 {
 	int c = 0;
@@ -26,43 +38,53 @@ void viderBuffer()
 	}
 }
 
+int askNumberInput(int min, int max)
+{
+    while (1) {
+        int input;
+        int error = scanf_s("%d", &input);
+        printf("%d", error);
 
 
-void play() {
-    
-    int ligne = ' ';
-    printf("bonsoir michel tu veut jouer quel ligne ?");
-    scanf_s ("%d", &ligne);
-    while (ligne > Ligne - 1 && ligne == 0) {
-        viderBuffer();
-        printf("Tu doit choisir un chiffre entre 1 et %d", Ligne);
-        scanf_s("%d", ligne);
     };
-    int colonne = ' ';
-        printf("Maintenant tu veut jouer quelles colonne ?");
-        scanf_s("%d", &colonne);
-        while (colonne <= Colonne - 1 && colonne > 0) {
-			viderBuffer();
-			printf("Tu doit choisir un chiffre entre 1 et %d", Colonne);
-			scanf_s("%d", colonne);
-        };
 };
 
 
+int play() {
+    
+    
+    printf("bonsoir michel tu veut jouer quel ligne ? ");
+    int ligne = askNumberInput(1, Ligne);
+        printf("Maintenant tu veut jouer quelles colonne ? ");
+        int colonne = askNumberInput(1, Colonne);
+        return ligne,colonne;
+};
 
-void grid( Case * odefault, int tableauJeu[Ligne][Colonne], char* tableauDefault[Ligne][Colonne], int i, int y)
+void initGrid(Case tableauJeu[Ligne * Colonne])
+{
+    Case odefault = { 0,0 };
+
+    for (int i = 0; i < Ligne; i++)
+    {
+        for (int y = 0; y < Colonne; y++)
+        {
+            tableauJeu[getIndex1D(i, y)] = odefault;
+        };
+    };
+};
+
+void display(Case tableauJeu[Ligne * Colonne])
 {
 
-    while (i < Ligne)
+    for (int i = 0; i < Ligne + 1; i++)
     {
-        y = 0;
-        while (y < Colonne)
+        for (int y = 0; y < Colonne + 1; y++)
         {
             if (i == 0 && y == 0)
             {
                 printf("     ");
             }
-            else if (y == Colonne - 1 && i == 0)
+            else if (y == Colonne  && i == 0)
             {
                 printf("%d", y);
                 printf("\n");
@@ -85,39 +107,57 @@ void grid( Case * odefault, int tableauJeu[Ligne][Colonne], char* tableauDefault
             }
             else
             {
-                tableauJeu[i][y] = odefault -> number;
-                tableauDefault[i][y] = " ? ";
-                printf("%s", tableauDefault[i][y]);
+                printf(" %d ", tableauJeu[getIndex1D(i, y)]);
             };
-            y++;
         };
         printf("\n");
-        i++;
     }
     printf("\n");
 };
 
 
+void placeBombe (int nbBombe, Case tableauJeu[Ligne * Colonne])
+{
+    //int tableauPBombe[Ligne * Colonne];
+
+    Case oBombe = { -1,0 };
+
+    while (nbBombe > 0)
+    {
+        int random = rand() % ( Ligne * Colonne );
+        if (tableauJeu[random].number != -1)
+        {
+            tableauJeu[random] = oBombe ;
+            nbBombe = nbBombe - 1;
+        };
+
+    };
+};
+
+
 int main()
-{   // create grid
-   
-    Case odefault = { 0,0 };
-
-    int nbBombe = round(((Ligne - 1) * (Colonne - 1)) / 6);
+{
+    int nbBombe = (int) round(((Ligne) * (Colonne)) / 6.0);
     int nbFlag = nbBombe;
+    Case tableauJeu[Ligne * Colonne];
+	while (1) 
+    {
 
-    int tableauJeu[Ligne][Colonne];
-    char* tableauDefault[Ligne][Colonne];
+    initGrid(tableauJeu);
 
-    int i = 0;
-    int y = 0;
+    placeBombe(nbBombe, tableauJeu);
 
-    grid(&odefault, tableauJeu, tableauDefault, i, y);
+    display(tableauJeu);
 
+    
     play();
+    }
 
     return 0;
 };
+
+
+// quand choix placement enlever 1 à i et j
 
 
 // debut découvre tout ceux de number 0 et le premier ayant un nombre supérieur à 1
