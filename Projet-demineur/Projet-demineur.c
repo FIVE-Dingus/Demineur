@@ -43,10 +43,19 @@ int askNumberInput(int min, int max)
     while (1) {
         int input;
         int error = scanf_s("%d", &input);
-        printf("%d", error);
+        if (error == 0) {
+			viderBuffer();
+			printf("Vous avez entrez une ou des lettres, entrez un nombre entre %d et %d! ", min, max);
+		}
+		else if (input >= min && input <= max) {
+			return input;
+		}
+		else {
+			viderBuffer();
+			printf("le nombre choisi n'est pas entre %d et %d! ", min, max);
+		};
+	};
 
-
-    };
 };
 
 
@@ -75,40 +84,36 @@ void initGrid(Case tableauJeu[Ligne * Colonne])
 
 void display(Case tableauJeu[Ligne * Colonne])
 {
-
-    for (int i = 0; i < Ligne + 1; i++)
+    printf("    ");
+    for (int i =0; i < Ligne; i++)
     {
-        for (int y = 0; y < Colonne + 1; y++)
+        if (i >= 10)
         {
-            if (i == 0 && y == 0)
-            {
-                printf("     ");
-            }
-            else if (y == Colonne  && i == 0)
-            {
-                printf("%d", y);
-                printf("\n");
-            }
-            else if (i > 9 && y == 0)
-            {
-                printf("%d  ", i);
-            }
-            else if (y > 9 && i == 0)
-            {
-                printf("%d ", y);
-            }
-            else if (i == 0)
-            {
-                printf("%d  ", y);
-            }
-            else if (y == 0)
-            {
-                printf("%d   ", i);
-            }
-            else
-            {
-                printf(" %d ", tableauJeu[getIndex1D(i, y)]);
-            };
+            printf("%d ", i+1);
+        }
+        else
+        {
+            printf("%d  ", i+1);
+        };
+        
+    };
+    printf("\n");
+
+
+    for (int i = 0; i < Ligne; i++)
+    {
+        if (i >= 10)
+        {
+            printf("%d  ", i+1);
+        }
+        else
+        {
+            printf("%d   ", i+1);
+        };
+
+        for (int y = 0; y < Colonne; y++)
+        { 
+            printf(" %d ", tableauJeu[getIndex1D(i, y)].number);
         };
         printf("\n");
     }
@@ -120,7 +125,7 @@ void placeBombe (int nbBombe, Case tableauJeu[Ligne * Colonne])
 {
     //int tableauPBombe[Ligne * Colonne];
 
-    Case oBombe = { -1,0 };
+    Case oBombe = { 1,0 };
 
     while (nbBombe > 0)
     {
