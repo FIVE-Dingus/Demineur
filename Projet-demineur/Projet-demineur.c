@@ -15,6 +15,7 @@ typedef struct Case
 {
     int number; //chiffre présent dans la case 0 par défaut, -1 pour une bombe ou nb bombe autour 
     int statut; //statut de la case 0 si pas découvert, 1 si découvert et -1 pour le drapeau
+    char symbol; // symbole montré sur la grille de jeu
 
 }Case;
 
@@ -71,7 +72,7 @@ int play() {
 
 void initGrid(Case tableauJeu[Ligne * Colonne])
 {
-    Case odefault = { 0,0 };
+    Case odefault = { 0,0 ,'?'};
 
     for (int i = 0; i < Ligne; i++)
     {
@@ -125,7 +126,7 @@ void placeBombe (int nbBombe, Case tableauJeu[Ligne * Colonne])
 {
     //int tableauPBombe[Ligne * Colonne];
 
-    Case oBombe = { 1,0 };
+    Case oBombe = { 1,0 ,'*'};
 
     while (nbBombe > 0)
     {
