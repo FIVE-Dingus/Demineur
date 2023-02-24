@@ -106,7 +106,7 @@ void actionChoice()
 
 
 
-void play(ligne, colonne, Case * tableauJeu[Ligne * Colonne])
+void play(int ligne, int colonne, Case tableauJeu[Ligne * Colonne])
 {
     display(tableauJeu);
 
@@ -205,18 +205,29 @@ void placeBombe(int nbBombe, Case tableauJeu[Ligne * Colonne])
     };
 };
 
-void placeFlag(int position, char flaged, Case tableauJeu[Ligne * Colonne])
+void placeFlag(int position, char flaged, Case tableauJeu[Ligne * Colonne], int * nbFlag)
 {
     if (flaged == 'd')
     {
-        if (tableauJeu[position].symbol != 'F')
+        if (*nbFlag > 0)
         {
-            tableauJeu[position].symbol = 'F';
+            if (tableauJeu[position].symbol != 'F')
+            {
+                tableauJeu[position].symbol = 'F';
+                *nbFlag--;
+            }
+            else
+            {
+                tableauJeu[position].symbol = tableauJeu[position].number + '0';
+                *nbFlag++;
+            };
         }
         else
         {
             tableauJeu[position].symbol = tableauJeu[position].number + '0';
+            *nbFlag++;
         };
+       
     };
 };
 
@@ -248,6 +259,7 @@ int main()
 };
 
 // quand choix placement enlever 1 à i et j
+
 
 
 // debut découvre tout ceux de number 0 et le premier ayant un nombre supérieur à 1
