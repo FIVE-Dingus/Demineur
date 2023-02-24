@@ -1,6 +1,3 @@
-// Projet-demineur.cpp : Ce fichier contient la fonction 'main'. L'exécution du programme commence et se termine à cet endroit.
-//
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -104,17 +101,6 @@ void actionChoice()
 
 };
 
-
-
-void play(int ligne, int colonne, Case tableauJeu[Ligne * Colonne])
-{
-    display(tableauJeu);
-
-            positionChoice(&ligne, &colonne);
-            tableauJeu[getIndex1D(ligne - 1, colonne - 1)].statut = 1;
-            tableauJeu[getIndex1D(ligne - 1, colonne - 1)].symbol = 3;
-}
-
 void initGrid(Case tableauJeu[Ligne * Colonne])
 {
     Case odefault = { 0,0 ,'?' };
@@ -126,6 +112,48 @@ void initGrid(Case tableauJeu[Ligne * Colonne])
             tableauJeu[getIndex1D(i, y)] = odefault;
         };
     };
+};
+void isReveal(Case tableauJeu[Ligne * Colonne])
+{
+    printf("      ");
+    for (int i = 0; i < Ligne; i++)
+    {
+        if (i >= 10)
+        {
+            printf("%d ", i + 1);
+        }
+        else
+        {
+            printf("%d  ", i + 1);
+        };
+
+    };
+    printf("\n\n");
+
+
+    for (int i = 0; i < Ligne; i++)
+    {
+        if (i >= 9)
+        {
+            printf(" %d  ", i + 1);
+        }
+        else
+        {
+            printf(" %d   ", i + 1);
+        };
+
+        for (int y = 0; y < Colonne; y++)
+        {
+            if (tableauJeu[getIndex1D(i, y)].statut == 0 && tableauJeu[getIndex1D(i, y)].symbol == '?')
+            {
+                tableauJeu[getIndex1D(i, y)].symbol = 'x';
+            };
+        
+            printf(" %c ", tableauJeu[getIndex1D(i, y)].symbol);
+        };
+        printf("\n");
+    }
+    printf("\n");
 };
 
 void display(Case tableauJeu[Ligne * Colonne])
@@ -166,6 +194,12 @@ void display(Case tableauJeu[Ligne * Colonne])
     printf("\n");
 };
 
+void placeBombeDebug(int x, int y,  Case tableauJeu[Ligne * Colonne])
+{
+    Case oBombe = { -1,0 ,'*' };
+    tableauJeu[getIndex1D(x, y)] = oBombe;
+
+}
 
 void placeBombe(int nbBombe, Case tableauJeu[Ligne * Colonne])
 {
@@ -187,9 +221,9 @@ void placeBombe(int nbBombe, Case tableauJeu[Ligne * Colonne])
 
         tableauJeu[getIndex1D(randomX, randomY)] = oBombe;
 
-        for (int i = randomX - 1; i < 2; i++)
+        for (int i = randomX - 1; i < randomX + 2; i++)
         {
-            for (int j = randomY - 1; j < 2; j)
+            for (int j = randomY - 1; j < randomY + 2; j++)
                 if (i < 0 || j < 0 || i > Ligne - 1 || j > Colonne - 1)
                 {
                     continue;
@@ -200,8 +234,9 @@ void placeBombe(int nbBombe, Case tableauJeu[Ligne * Colonne])
                     tableauJeu[getIndex1D(i, j)].symbol = tableauJeu[getIndex1D(i, j)].number + '0';
                 };
 
-            };
-            nbBombe = nbBombe - 1;
+        };
+        
+        nbBombe = nbBombe - 1;
     };
 };
 
@@ -214,53 +249,87 @@ void placeFlag(int position, char flaged, Case tableauJeu[Ligne * Colonne], int 
             if (tableauJeu[position].symbol != 'F')
             {
                 tableauJeu[position].symbol = 'F';
-                *nbFlag--;
+                *nbFlag = nbFlag - 1;
             }
             else
             {
                 tableauJeu[position].symbol = tableauJeu[position].number + '0';
-                *nbFlag++;
+                *nbFlag = nbFlag + 1;
             };
         }
         else
         {
             tableauJeu[position].symbol = tableauJeu[position].number + '0';
-            *nbFlag++;
+            *nbFlag = nbFlag + 1;
         };
        
     };
 };
 
+void play(int ligne, int colonne, Case tableauJeu[Ligne * Colonne])
+{
+    int gagnant = 0;
+    while (gagnant == 0) {
+        display(tableauJeu);
+        printf("Que souhaitez vous placer d pour un drapeau et c pour casser : ");
+        char choix = askResponseInput('d', 'c');
+        positionChoice(&ligne, &colonne);
+        if (tableauJeu[getIndex1D(ligne - 1, colonne - 1)].number == -1)
+        {
+            isReveal(tableauJeu);
+            printf("Vous avez perdu gros noob\n\n");
+            gagnant = 1; 
+        }
+        else if (tableauJeu[getIndex1D(Ligne, Colonne)].statut == 1)
+        {
+          printf("Vous avez gagnez bande de Gigachad");
+          gagnant = 2;
+        }
+        else if (choix == 'c') {
+            tableauJeu[getIndex1D(ligne - 1, colonne - 1)].statut = 1;
+            tableauJeu[getIndex1D(ligne - 1, colonne - 1)].symbol = 3;
+        }
+        else
+        {
+            tableauJeu[getIndex1D(ligne - 1, colonne - 1)].statut = 1;
+            tableauJeu[getIndex1D(ligne - 1, colonne - 1)].symbol = 'F';
+        };
+    };
+}
+
 int main()
 {
-    while (1) {
-        int nbBombe = (int)round(((Ligne) * (Colonne)) / 6.0);
-        int nbFlag = nbBombe;
-        int ligne;
-        int colonne;
-        
-        Case tableauJeu[Ligne * Colonne];
-        initGrid(tableauJeu);
-        placeBombe(nbBombe, tableauJeu);
-        while (1)
-        {
-            play(tableauJeu, ligne, colonne);
-        }
-		printf("Souhaitez vous rejouez, si oui tapez o et si non tapez n");
-		char reponse = askResponseInput('o', 'n');
-		if (reponse == 'o') {
-            return 1;
-		}
-		else
-		{
-			return 0;
-		}
-    };
+    int nbBombe = (int)round(((Ligne) * (Colonne)) / 6.0);
+    int nbFlag = nbBombe;
+    int ligne = 0;
+    int colonne = 0;
+
+    Case tableauJeu[Ligne * Colonne];
+    initGrid(tableauJeu);       
+    placeBombe(nbBombe, tableauJeu);
+    //placeBombeDebug(0, 0, tableauJeu);
+
+        play(ligne, colonne, tableauJeu);
+
+	printf("Souhaitez vous rejouez, si oui tapez o et si non tapez n : ");
+	char reponse = askResponseInput('o', 'n');
+	if (reponse == 'o') {
+        main();
+	}
+	else
+	{
+		return 0;
+	}
 };
 
+/* a faire */
+
+// quand on gagne
+// fonction découverte
+
+
+
 // quand choix placement enlever 1 à i et j
-
-
 
 // debut découvre tout ceux de number 0 et le premier ayant un nombre supérieur à 1
 
