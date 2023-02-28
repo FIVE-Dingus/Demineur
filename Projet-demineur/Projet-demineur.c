@@ -450,16 +450,6 @@ int main()
 
 /* a faire */
 
-// quand on gagne
-// fonction decouverte
+// première découverte
+// interface graphique
 
-
-
-//tab = malloc(sizeof(int));
-//free(tab);
-//realloc(tab,(sizeof(int));
-//memcpy
-
-// quand choix placement enlever 1 à i et j
-
-// debut decouvre tout ceux de number 0 et le premier ayant un nombre superieur à 1
