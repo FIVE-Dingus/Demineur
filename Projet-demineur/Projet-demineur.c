@@ -481,7 +481,7 @@ int difficulty(int diff)
 	}
 	else if (diff == 4)
 	{
-		int nbBombe = (int)(round((((LIGNE) * (COLONNE)) -1 )-25));
+		int nbBombe = (int)(round((((LIGNE) * (COLONNE)) -10 )));
 		return nbBombe;
 	}
 }
@@ -502,11 +502,11 @@ int main()
         int ligne = 0;
         int colonne = 0;
         int compteCasePlayed = 0;
-        int tableauBombTaille = LIGNE * COLONNE;
 
         Case* tableauJeu = malloc(sizeof(Case) * (LIGNE * COLONNE));
         Case* tableauReveal = malloc(sizeof(Case) * (LIGNE * COLONNE));
-        int* tableauDispBombe = malloc(sizeof(int) * tableauBombTaille);
+        int tableauBombTaille = malloc(sizeof(int) * (LIGNE * COLONNE));
+        int * tableauDispBombe = malloc(sizeof(int) * tableauBombTaille);
 
         for (int i = 0; i < tableauBombTaille; i++)
         {
