@@ -510,12 +510,12 @@ int difficulty(int diff)
 int main()
 {
     while (1) {
-        printf("Bonjour vous souhaitez combien de lignes dans cette partie : ");
-        LIGNE = askNumberInput(6, INT_MAX);
-        printf("Maintenant vous souhaitez combien de colonnes dans cette partie :");
-        COLONNE = askNumberInput(6, INT_MAX);
 		printf("et enfin vous souhaitez quelle difficulte dans cette partie 1:facile 2:moyenne 3:complique 4:HardcoreSaMaman:");
         DIFFICULTY = askNumberInput(1, 4);
+        printf("Bonjour vous souhaitez combien de lignes dans cette partie : ");
+        LIGNE = askNumberInput(DIFFICULTY + 7, INT_MAX);
+        printf("Maintenant vous souhaitez combien de colonnes dans cette partie :");
+        COLONNE = askNumberInput(DIFFICULTY + 6, INT_MAX);
         int coordonneesX = 0;
         int coordonneesY = 0;
         int nbBombe = difficulty(DIFFICULTY);
