@@ -26,15 +26,14 @@ int main()
         y = 0;
         while (y < size)
         {
-            if (i == 0 && y == 0)
+            if (i < 1 && y < 1)
             {
-                printf("  ");
+                printf("0 ");
             }
-            if (i==0)
             else
             {
                 tableau[i][y] = odefault.number;
-                printf("? ");
+                printf("  ");
             }
      
 
