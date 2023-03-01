@@ -6,10 +6,19 @@ int max(int a, int b) { return (a < b) ? b : a; }
 #include <math.h>
 #include <time.h>
 #include < limits.h >
+#include <SDL.h>
 
-int Ligne = 10;
-int Colonne = 10;
-int diff = 0;
+
+SDL_Window* SDL_CreateWindow(const char* title,
+    int         x,
+    int         y,
+    int         w,
+    int         h,
+    Uint32      flags);
+
+int LIGNE = 10;
+int COLONNE = 10;
+int DIFFICULTY = 0;
 
 typedef struct Case
 {
@@ -27,7 +36,7 @@ int getIndex1D(int i, int j)
     // j = colone
     // i = ligne
 
-    return i * Colonne + j;
+    return i * COLONNE + j;
 
 };
 
@@ -35,9 +44,9 @@ int getIndex1D(int i, int j)
 void returnIndex1D(int place,int* coordonneesX, int* coordonneesY)
 {
     //permet de recuperer les coordonnees grâce aux coordonnes de la memoire
-    *coordonneesY = (place % Colonne);
+    *coordonneesY = (place % COLONNE);
     
-    *coordonneesX = (place - (place % Colonne) ) / Colonne;
+    *coordonneesX = (place - (place % COLONNE) ) / COLONNE;
 };
 
 void viderBuffer()
@@ -89,10 +98,10 @@ char askResponseInput(char c1, char c2)
 
 void positionChoice(int * x, int * y) 
 {
-    printf("Alors quelle ligne veux-tu jouer   ?: ");
-    *x = askNumberInput(1, Ligne);
+    printf("Alors quelle ligne veux-tu jouer ?: ");
+    *x = askNumberInput(1, LIGNE);
     printf("Maintenant quelle colonne veux-tu jouer ?: ");
-    *y = askNumberInput(1, Colonne);
+    *y = askNumberInput(1, COLONNE);
 };
 
 
@@ -100,9 +109,9 @@ void initGrid(Case* tableauJeu)
 {
     Case odefault = { 0,0 ,'0' };
 
-    for (int i = 0; i < Ligne; i++)
+    for (int i = 0; i < LIGNE; i++)
     {
-        for (int y = 0; y < Colonne; y++)
+        for (int y = 0; y < COLONNE; y++)
         {
             tableauJeu[getIndex1D(i, y)] = odefault;
         };
@@ -120,7 +129,7 @@ void reveal(Case* tableauJeu, int x, int y)
 void looseReveal(Case* tableauReveal)
 {
     printf("      ");
-    for (int i = 0; i < Colonne; i++)
+    for (int i = 0; i < COLONNE; i++)
     {
         if (i >= 10)
         {
@@ -135,7 +144,7 @@ void looseReveal(Case* tableauReveal)
     printf("\n\n");
 
 
-    for (int i = 0; i < Ligne; i++)
+    for (int i = 0; i < LIGNE; i++)
     {
         if (i >= 9)
         {
@@ -146,7 +155,7 @@ void looseReveal(Case* tableauReveal)
             printf(" %d   ", i + 1);
         };
 
-        for (int y = 0; y < Colonne; y++)
+        for (int y = 0; y < COLONNE; y++)
         {
             if (tableauReveal[getIndex1D(i, y)].statut == 0 && tableauReveal[getIndex1D(i, y)].symbol == '?')
             {
@@ -161,20 +170,35 @@ void looseReveal(Case* tableauReveal)
     printf("\n");
 };
 
+void firstReveal(Case* tableauJeu, int ligne, int colonne, int* tableauDispBombe, int tableauBombTaille, int *compteCasePlayed)
+{
+    for (int i = ligne + 3; i >= ligne - 2; i = i - 1)
+    {
+        for (int j = colonne + 3; j >= colonne - 2; j = j - 1)
+        {
+            if (i < 0 || j < 0 || i >= LIGNE || j >= COLONNE)
+                continue;
+
+            int index = getIndex1D(i, j);
+
+            memcpy(tableauDispBombe + index, tableauDispBombe + index + 1, sizeof(int) * (tableauBombTaille - (index + 1)));
+            tableauDispBombe = realloc(tableauDispBombe, sizeof(int) * tableauBombTaille);
+        };
+    };
+}
+
 void revealNearby(int  x, int  y, Case * tableauJeu, int* compteCasePlayed)
 {
-    if (tableauJeu[getIndex1D(x-1, y-1)].number != -1)
-    {
-        tableauJeu[getIndex1D(x-1, y-1)].statut = 1;
-        *compteCasePlayed = compteCasePlayed + 1;
-    }
+    int index = getIndex1D(x, y);
+    tableauJeu[index].statut = 1;
+    *compteCasePlayed = compteCasePlayed + 1;
     
-    if (tableauJeu[getIndex1D(x-1, y-1)].number == 0)
+    if (tableauJeu[index].number == 0)
     {
         int maxX = max(0, x - 1);
-        int minX = min(Colonne - 1, x + 1);
+        int minX = min(COLONNE - 1, x + 1);
         int maxY = max(0, y - 1);
-        int minY = min(Ligne - 1, y + 1);
+        int minY = min(LIGNE - 1, y + 1);
         for (int i = maxX; i <= minX; i++)
         {
             for (int j = maxY; j <= minY; j++)
@@ -192,7 +216,7 @@ void display(Case* tableauJeu)
 {
     // print colonne
     printf("      ");
-    for (int y = 0; y < Colonne; y++)
+    for (int y = 0; y < COLONNE; y++)
     {
         if (y >= 10)
         {
@@ -207,7 +231,7 @@ void display(Case* tableauJeu)
     printf("\n\n");
 
     // print ligne
-    for (int i = 0; i < Ligne; i++)
+    for (int i = 0; i < LIGNE; i++)
     {
         if (i >= 9)
         {
@@ -218,9 +242,9 @@ void display(Case* tableauJeu)
             printf(" %d   ", i + 1);
         };
 
-    for (int y = 0; y < Colonne; y++)
+    for (int y = 0; y < COLONNE; y++)
     {
-        /*if (tableauJeu[getIndex1D(i, y)].statut == 1)
+        if (tableauJeu[getIndex1D(i, y)].statut == 1)
         {
             tableauJeu[getIndex1D(i, y)].symbol = tableauJeu[getIndex1D(i, y)].number + '0';
             printf(" %c ", tableauJeu[getIndex1D(i, y)].symbol);
@@ -228,8 +252,8 @@ void display(Case* tableauJeu)
         else
         {
             printf(" ? ");
-        };*/
-        printf(" %c ", tableauJeu[getIndex1D(i, y)].symbol);
+        };
+        //printf(" %c ", tableauJeu[getIndex1D(i, y)].symbol);
     };
     printf("\n");
     }  
@@ -245,7 +269,7 @@ void placeBombeDebug(int x, int y, Case * tableauJeu)
     for (int i = x - 1; i < x + 2; i++)
     {
         for (int j = y - 1; j < y + 2; j++)
-            if (i < 0 || j < 0 || i > Ligne - 1 || j > Colonne - 1)
+            if (i < 0 || j < 0 || i > LIGNE - 1 || j > COLONNE - 1)
             {
                 continue;
             }
@@ -268,12 +292,6 @@ void placeBombe(int nbBombe, Case * tableauJeu, int * coordonneesX, int * coordo
     Case oBombe = { -1,0 ,'*' };
     srand(time(NULL));
 
-    for (int i = 0; i < tableauBombTaille; i++)
-    {
-        tableauDispBombe[i] = i;
-    };
-    
-    
     while (nbBombe > 0)
     {
         //random sur l'indice
@@ -301,7 +319,7 @@ void placeBombe(int nbBombe, Case * tableauJeu, int * coordonneesX, int * coordo
         for (int i = randomPosX - 1; i < randomPosX + 2; i++)
         {
             for (int j = randomPosY - 1; j < randomPosY + 2; j++)
-                if (i < 0 || j < 0 || i > Ligne - 1 || j > Colonne - 1)
+                if (i < 0 || j < 0 || i > LIGNE - 1 || j > COLONNE - 1)
                 {
                     continue;
                 }
@@ -320,11 +338,12 @@ void placeBombe(int nbBombe, Case * tableauJeu, int * coordonneesX, int * coordo
     };
 };
 
-void play(int ligne, int colonne, Case * tableauJeu, Case * tableauReveal, int nbBombe, int compteCasePlayed)
+
+void play(int ligne, int colonne, Case * tableauJeu, Case * tableauReveal, int nbBombe, int *compteCasePlayed, int* tableauDispBombe, int tableauBombTaille, int * coordonneesX, int * coordonneesY)
 {
-	
     int gagnant = 0;
     while (gagnant == 0) {
+        system("cls");
         display(tableauJeu);
         printf("Que souhaitez vous placer d pour un drapeau et c pour casser (d/c) : ");
         char choix = askResponseInput('d', 'c');
@@ -348,29 +367,40 @@ void play(int ligne, int colonne, Case * tableauJeu, Case * tableauReveal, int n
         }
         else if (choix == 'c')
         {
-            revealNearby(ligne, colonne, tableauJeu, &compteCasePlayed);
+            printf("%d", *compteCasePlayed);
+            if (*compteCasePlayed == 0)
+            {
+                firstReveal(tableauJeu, ligne, colonne, tableauDispBombe, tableauBombTaille, compteCasePlayed);
+                placeBombe(nbBombe, tableauJeu, &coordonneesX, &coordonneesY, tableauDispBombe, tableauBombTaille);
+                revealNearby(ligne, colonne, tableauJeu, compteCasePlayed);
+            }
+            else
+            {
+                revealNearby(ligne, colonne, tableauJeu, compteCasePlayed);
 
-            if (tableauJeu[getIndex1D(ligne - 1, colonne - 1)].number == -1)
-            {
-                looseReveal(tableauReveal);
-                printf("Vous avez perdu bande de noobz\n\n");
-                gagnant = 1;
-            }
-            else if (compteCasePlayed == Ligne * Colonne - nbBombe)
-            {
-                printf("Vous avez gagne bande de Gigachad");
-                gagnant = 2;
-            }
-            else if (tableauJeu[getIndex1D(ligne - 1, colonne - 1)].statut == 0) {
+                if (tableauJeu[getIndex1D(ligne - 1, colonne - 1)].number == -1)
+                {
+                    looseReveal(tableauReveal);
+                    printf("Vous avez perdu bande de noobz\n\n");
+                    gagnant = 1;
+                }
+                else if (*compteCasePlayed == LIGNE * COLONNE - nbBombe)
+                {
+                    printf("Vous avez gagne bande de Gigachad");
+                    gagnant = 2;
+                }
+                else if (tableauJeu[getIndex1D(ligne - 1, colonne - 1)].statut == 0) {
 
-                tableauJeu[getIndex1D(ligne - 1, colonne - 1)].statut = 1;
-                tableauJeu[getIndex1D(ligne - 1, colonne - 1)].symbol = 3;
-                compteCasePlayed = compteCasePlayed + 1;
+                    tableauJeu[getIndex1D(ligne - 1, colonne - 1)].statut = 1;
+                    tableauJeu[getIndex1D(ligne - 1, colonne - 1)].symbol = 3;
+                    *compteCasePlayed = compteCasePlayed + 1;
+                }
+                else if (tableauJeu[getIndex1D(ligne - 1, colonne - 1)].statut == 1)
+                {
+                    printf("\nCette case a deja ete jouer, veuillez jouer autre chose\n");
+                }
             }
-            else if (tableauJeu[getIndex1D(ligne - 1, colonne - 1)].statut == 1)
-            {
-                printf("\nCette case a deja ete jouer, veuillez jouer autre chose\n");
-            }
+            
         }
         	
     };
@@ -380,22 +410,22 @@ int difficulty(int diff)
 {
     if (diff == 1)
     {
-        int nbBombe = (int)round(((Ligne) * (Colonne)) / 6.0);
+        int nbBombe = (int)round(((LIGNE) * (COLONNE)) / 6.0);
         return nbBombe;
     }
     else if (diff == 2)
     {
-		int nbBombe = (int)(round(((Ligne) * (Colonne)) / 6.0)) * 2;
+		int nbBombe = (int)(round(((LIGNE) * (COLONNE)) / 6.0)) * 2;
 		return nbBombe;
     }
 	else if (diff == 3)
 	{
-		int nbBombe = (int)(round(((Ligne) * (Colonne)) / 6.0)) * 3;
+		int nbBombe = (int)(round(((LIGNE) * (COLONNE)) / 6.0)) * 3;
 		return nbBombe;
 	}
 	else if (diff == 4)
 	{
-		int nbBombe = (int)(round(((Ligne) * (Colonne)) -1 ));
+		int nbBombe = (int)(round(((LIGNE) * (COLONNE)) -1 ));
 		return nbBombe;
 	}
 }
@@ -404,41 +434,44 @@ int main()
 {
     while (1) {
         printf("Bonjour vous souhaitez combien de lignes dans cette partie : ");
-        Ligne = askNumberInput(2, INT_MAX);
+        LIGNE = askNumberInput(2, INT_MAX);
         printf("Maintenant vous souhaitez combien de colonnes dans cette partie :");
-        Colonne = askNumberInput(2, INT_MAX);
+        COLONNE = askNumberInput(2, INT_MAX);
 		printf("et enfin vous souhaitez quelle difficulte dans cette partie 1:facile 2:moyenne 3:complique 4:HardcoreSaMaman:");
-        diff = askNumberInput(1, 4);
+        DIFFICULTY = askNumberInput(1, 4);
         int coordonneesX = 0;
         int coordonneesY = 0;
-        int nbBombe = difficulty(diff);
+        int nbBombe = difficulty(DIFFICULTY);
         int nbFlag = nbBombe;
         int ligne = 0;
         int colonne = 0;
 		int compteCasePlayed = 0;
-        int tableauBombTaille = Ligne * Colonne;
-
+        int tableauBombTaille = LIGNE * COLONNE;
 		
-        Case * tableauJeu = malloc(sizeof(Case) * (Ligne * Colonne));
-		Case* tableauReveal = malloc(sizeof(Case) * (Ligne * Colonne));
+        Case * tableauJeu = malloc(sizeof(Case) * (LIGNE * COLONNE));
+		Case* tableauReveal = malloc(sizeof(Case) * (LIGNE * COLONNE));
 		int * tableauDispBombe = malloc(sizeof(int) * tableauBombTaille);
-        
+
+        for (int i = 0; i < tableauBombTaille; i++)
+        {
+            tableauDispBombe[i] = i;
+        };
       
         initGrid(tableauJeu);
 
-        placeBombe(nbBombe, tableauJeu, &coordonneesX, &coordonneesY, tableauDispBombe, tableauBombTaille);
         //placeBombeDebug(0, 0, tableauJeu);
 
-        memcpy(tableauReveal, tableauJeu, sizeof(Case)* (Ligne * Colonne));
-        
+        memcpy(tableauReveal, tableauJeu, sizeof(Case)* (LIGNE * COLONNE));
 
-        play(ligne, colonne, tableauJeu,tableauReveal, nbBombe, &compteCasePlayed);
+
+        play(ligne, colonne, tableauJeu,tableauReveal, nbBombe, &compteCasePlayed, tableauDispBombe, tableauBombTaille, coordonneesX, coordonneesY);
 
         printf("Souhaitez vous rejouez, si oui tapez o et si non tapez n : ");
         char reponse = askResponseInput('o', 'n');
 
 		free(tableauJeu);
 		free(tableauReveal);
+        free(tableauDispBombe);
 
         if (reponse == 'n')
         {
