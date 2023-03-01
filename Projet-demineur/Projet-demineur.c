@@ -60,7 +60,7 @@ void Color(int couleurDuTexte, int couleurDeFond)
 
 void numberColor(int ligne, int colonne, Case* tableauJeu)
 {
-    int index = getIndex1D(ligne, colonne);
+    int index = getIndex1D(ligne-1, colonne-1);
     if (tableauJeu[index].statut == 1)
     {
         if (tableauJeu[index].number == 0)
@@ -226,9 +226,9 @@ void looseReveal(Case* tableauReveal)
 
 void firstReveal(Case* tableauJeu, int ligne, int colonne, int* tableauDispBombe, int tableauBombTaille, int *compteCasePlayed)
 {
-    for (int i = ligne + 3; i >= ligne - 2; i = i - 1)
+    for (int i = (ligne-1) + 3; i >= (ligne - 1) - 2; i = i - 1)
     {
-        for (int j = colonne + 3; j >= colonne - 2; j = j - 1)
+        for (int j = (colonne-1) + 3; j >= (colonne-1) - 2; j = j - 1)
         {
             if (i < 0 || j < 0 || i >= LIGNE || j >= COLONNE)
                 continue;
@@ -403,7 +403,8 @@ void play(int ligne, int colonne, Case * tableauJeu, Case * tableauReveal, int n
         printf("Que souhaitez vous placer d pour un drapeau et c pour casser (d/c) : ");
         char choix = askResponseInput('d', 'c');
         positionChoice(&ligne, &colonne);
-        if (choix == 'd') {
+        if (choix == 'd')
+        {
             if (tableauJeu[getIndex1D(ligne - 1, colonne - 1)].symbol != 'F')
             {
                 tableauJeu[getIndex1D(ligne - 1, colonne - 1)].statut = 1;
