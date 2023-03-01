@@ -441,6 +441,10 @@ int difficulty(int diff)
 int main()
 {
     while (1) {
+        char title = "lol";
+        int x, y, w, h;
+        Uint32 flags = 0;
+        SDL_CreateWindow( title, x, y, w, h, flags);
         printf("Bonjour vous souhaitez combien de lignes dans cette partie : ");
         LIGNE = askNumberInput(2, INT_MAX);
         printf("Maintenant vous souhaitez combien de colonnes dans cette partie :");
