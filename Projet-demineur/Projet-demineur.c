@@ -497,11 +497,5 @@ int main()
 
 /* a faire */
 
-// première découverte
 // interface graphique
 
-/* erreurs */
-
-
-// erreur sur la victoire
-// dernière verif
