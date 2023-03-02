@@ -250,7 +250,7 @@ void display(Case* tableauJeu)
         
         if (tableauJeu[getIndex1D(i, y)].statut == 1)
         {
-            if (tableauJeu[getIndex1D(i, y)].symbol != '*')
+            if (tableauJeu[getIndex1D(i, y)].symbol != '*' && tableauJeu[getIndex1D(i, y)].symbol != 'F')
             {
                 tableauJeu[getIndex1D(i, y)].symbol = tableauJeu[getIndex1D(i, y)].number + '0';
             };
@@ -332,7 +332,6 @@ void placeBombe(int nbBombe, Case* tableauJeu, int* tableauDispBombe, int tablea
                 {
                     if (tableauJeu[getIndex1D(i, j)].symbol != '*')
                     {
-                        display(tableauJeu);
                         tableauJeu[getIndex1D(i, j)].number++;
                         tableauJeu[getIndex1D(i, j)].symbol = tableauJeu[getIndex1D(i, j)].number + '0';
                     }
@@ -365,8 +364,8 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* compteCasePla
         {
             if (tableauJeu[index].symbol != 'F' && tableauJeu[index].statut == 0 )
             {
-                tableauJeu[index].statut = 1;
-                tableauJeu[index].symbol = 3;
+                tableauJeu[index].symbol = 'F';
+                tableauJeu[index].statut = 1;                
             }
             else if (tableauJeu[index].statut == 1 && tableauJeu[index].number == -1 && tableauJeu[index].symbol == 'F')
             {
