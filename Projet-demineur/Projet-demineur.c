@@ -221,7 +221,7 @@ void display(Case* tableauJeu)
     printf("      ");
     for (int y = 0; y < COLONNE; y++)
     {
-        if (y >= 10)
+        if (y >= 9)
         {
             printf("%d ", y + 1);
         }
