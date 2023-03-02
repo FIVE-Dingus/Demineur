@@ -1,3 +1,5 @@
+int SDL_Init(SDL_INIT_EVERYTHING);
+
 int min(int a, int b) { return (a > b) ? b : a; }
 int max(int a, int b) { return (a < b) ? b : a; }
 
@@ -7,15 +9,15 @@ int max(int a, int b) { return (a < b) ? b : a; }
 #include <time.h>
 #include < limits.h >
 #include <windows.h>
-//#include <SDL.h>
+#include <SDL.h>
 #include <windows.h>
 
-/*SDL_Window* SDL_CreateWindow(const char* title,
+SDL_Window* SDL_CreateWindow(const char* title,
     int         x,
     int         y,
     int         w,
     int         h,
-    Uint32      flags);*/
+    Uint32      flags);
 
 int LIGNE = 10;
 int COLONNE = 10;
@@ -457,15 +459,26 @@ int difficulty(int diff)
     }
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+    const char* SDL_GetError(void);
+
+    if (0 != SDL_Init(SDL_INIT_VIDEO))
+    {
+        fprintf(stderr, "Erreur SDL_Init : %s",
+        SDL_GetError());
+        return EXIT_FAILURE;
+    }
+         
     while (1) {
         printf("Bonjour vous souhaitez quelle difficulte dans cette partie 1:facile 2:moyenne 3:complique 4:HardcoreSaMaman:");
         DIFFICULTY = askNumberInput(1, 4);
         printf("vous souhaitez combien de lignes dans cette partie : ");
-        LIGNE = askNumberInput(DIFFICULTY + 8, INT_MAX);
+        LIGNE = askNumberInput(DIFFICULTY + 9, INT_MAX);
         printf("Maintenant vous souhaitez combien de colonnes dans cette partie :");
-        COLONNE = askNumberInput(DIFFICULTY + 7, INT_MAX);
+        COLONNE = askNumberInput(DIFFICULTY + 9, INT_MAX);
+
+        
 
 
         int coordonneesX = 0;
@@ -489,6 +502,8 @@ int main()
 
         if (reponse == 'n')
         {
+            void SDL_Quit(void);
+
             return 0;
         }
 
