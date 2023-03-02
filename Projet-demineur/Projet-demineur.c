@@ -8,7 +8,7 @@ int max(int a, int b) { return (a < b) ? b : a; }
 #include < limits.h >
 #include <windows.h>
 //#include <SDL.h>
-
+#include <windows.h>
 
 /*SDL_Window* SDL_CreateWindow(const char* title,
     int         x,
@@ -50,59 +50,7 @@ void returnIndex1D(int place, int* coordonneesX, int* coordonneesY)
     *coordonneesX = (place - (place % COLONNE) ) / COLONNE;
 };
 
-#include <windows.h>
 
-void Color(int couleurDuTexte, int couleurDeFond)
-{
-    HANDLE H = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(H, couleurDeFond * 16 + couleurDuTexte);
-}
-
-void numberColor(int ligne, int colonne, Case* tableauJeu)
-{
-    int index = getIndex1D(ligne-1, colonne-1);
-    if (tableauJeu[index].statut == 1)
-    {
-        if (tableauJeu[index].number == 0)
-        {
-            Color(1, 0);
-        }
-        else if (tableauJeu[index].number == 1)
-        {
-            Color(2, 0);
-        }
-        else if (tableauJeu[index].number == 2)
-        {
-            Color(3, 0);
-        }
-        else if (tableauJeu[index].number == 3)
-        {
-            Color(4, 0);
-        }
-        else if (tableauJeu[index].number == 4)
-        {
-            Color(5, 0);
-        }
-        else if (tableauJeu[index].number == 5)
-        {
-            Color(6, 0);
-        }
-        else if (tableauJeu[index].number == 6)
-        {
-            Color(7, 0);
-        }
-        else if (tableauJeu[index].number == 7)
-        {
-            Color(8, 0);
-        }
-        else if (tableauJeu[index].number == 8)
-        {
-            Color(9, 0);
-
-        };
-    };
-   
-}
 
 void viderBuffer()
 {
@@ -509,12 +457,13 @@ int difficulty(int diff)
 int main()
 {
     while (1) {
-		printf("et enfin vous souhaitez quelle difficulte dans cette partie 1:facile 2:moyenne 3:complique 4:HardcoreSaMaman:");
-        DIFFICULTY = askNumberInput(1, 4);
         printf("Bonjour vous souhaitez combien de lignes dans cette partie : ");
         LIGNE = askNumberInput(DIFFICULTY + 7, INT_MAX);
         printf("Maintenant vous souhaitez combien de colonnes dans cette partie :");
         COLONNE = askNumberInput(DIFFICULTY + 6, INT_MAX);
+		printf("et enfin vous souhaitez quelle difficulte dans cette partie 1:facile 2:moyenne 3:complique 4:HardcoreSaMaman:");
+        DIFFICULTY = askNumberInput(1, 4);
+        
         int coordonneesX = 0;
         int coordonneesY = 0;
         int nbBombe = difficulty(DIFFICULTY);
