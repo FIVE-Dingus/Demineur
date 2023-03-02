@@ -298,7 +298,7 @@ void placeBombe(int nbBombe, Case* tableauJeu, int * coordonneesX, int* coordonn
     Case oBombe = { -1,0 ,'*' };
     srand(time(NULL));
 
-    while (nbBombe > 0)
+    while (nbBombe > 0 && tableauBombTaille > 0)
     {
         //random sur l'indice
         int randomIndice = rand() % tableauBombTaille;
@@ -362,10 +362,10 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* compteCasePla
 
         if (choix == 'd')
         {
-            if (tableauJeu[index].symbol != 'F' && tableauJeu[index].statut != 1 )
+            if (tableauJeu[index].symbol != 'F' && tableauJeu[index].statut == 0 )
             {
                 tableauJeu[index].statut = 1;
-                tableauJeu[index].symbol = 'F';
+                tableauJeu[index].symbol = 3;
             }
             else if (tableauJeu[index].statut == 1 && tableauJeu[index].number == -1 && tableauJeu[index].symbol == 'F')
             {
@@ -375,7 +375,7 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* compteCasePla
             else if (tableauJeu[index].statut == 1 && tableauJeu[index].number >= 0 && tableauJeu[index].symbol == 'F')
             {
                 tableauJeu[index].statut = 0;
-                tableauJeu[index].symbol = tableauJeu[index].number + '0';
+                tableauJeu[index].symbol = tableauJeu[index].number + '?';
             }
         }
         else if (choix == 'c')
@@ -440,7 +440,7 @@ int difficulty(int diff)
 	}
 	else if (diff == 4)
 	{
-		int nbBombe = (int)(round((((LIGNE) * (COLONNE)) -10 )));
+		int nbBombe = (int)(round((LIGNE) * (COLONNE)-1));
 		return nbBombe;
 	}
 }
@@ -449,9 +449,9 @@ int main()
 {
     while (1) {
         printf("Bonjour vous souhaitez combien de lignes dans cette partie : ");
-        LIGNE = askNumberInput(DIFFICULTY + 7, INT_MAX);
+        LIGNE = askNumberInput(5, INT_MAX);
         printf("Maintenant vous souhaitez combien de colonnes dans cette partie :");
-        COLONNE = askNumberInput(DIFFICULTY + 6, INT_MAX);
+        COLONNE = askNumberInput(5, INT_MAX);
 		printf("et enfin vous souhaitez quelle difficulte dans cette partie 1:facile 2:moyenne 3:complique 4:HardcoreSaMaman:");
         DIFFICULTY = askNumberInput(1, 4);
         
@@ -469,7 +469,6 @@ int main()
         for (int i = 0; i < tableauBombTaille; i++)
         {
             tableauDispBombe[i] = i;
-            printf("%d", tableauDispBombe[i]);
         };
 
         initGrid(tableauJeu);
