@@ -172,7 +172,7 @@ void looseReveal(Case* tableauReveal)
     printf("\n");
 };
 
-void firstReveal(Case* tableauJeu, int ligne, int colonne, int* tableauDispBombe, int* tableauBombTaille, int* compteCasePlayed)
+void firstReveal(Case* tableauJeu, int ligne, int colonne, int* tableauDispBombe, int* tableauBombTaille, int *compteCasePlayed)
 {
     for (int i = ligne + 3; i >= ligne - 2; i = i - 1)
     {
@@ -393,11 +393,11 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
                 };
 
                 //placeBombeDebug(0, 0, tableauJeu);
-                firstReveal(tableauJeu, ligne, colonne, tableauDispBombe, &tableauBombTaille, compteCasePlayed);
+                firstReveal(tableauJeu, ligne, colonne, tableauDispBombe, &tableauBombTaille, &compteCasePlayed);
                 compteCasePlayed++;
                 placeBombe(nbBombe, tableauJeu, tableauDispBombe, tableauBombTaille);
                 memcpy(tableauReveal, tableauJeu, sizeof(Case) * (LIGNE * COLONNE));
-                revealNearby(ligne, colonne, tableauJeu, compteCasePlayed, 0);
+                revealNearby(ligne, colonne, tableauJeu, &compteCasePlayed, 0);
 
                 free(tableauDispBombe);
             }
@@ -414,7 +414,7 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
                     tableauJeu[index].statut = 1;
                     compteCasePlayed = compteCasePlayed + 1;
 
-                    revealNearby(ligne, colonne, tableauJeu, compteCasePlayed, 0);
+                    revealNearby(ligne, colonne, tableauJeu, &compteCasePlayed, 0);
                     
                     if (compteCasePlayed == (LIGNE * COLONNE) - nbBombe)
                     {
