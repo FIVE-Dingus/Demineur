@@ -501,7 +501,6 @@ int main()
 
 /* erreurs */
 
-// erreur avec affichage du Flag 'F' 
-// erreur surement sur le placement des bombes. Ewexemple dificulty 1 : 10/10 et casser en 5/5
+
 // erreur sur la victoire
 // dernière verif
