@@ -332,7 +332,6 @@ void placeBombe(int nbBombe, Case* tableauJeu, int* tableauDispBombe, int tablea
                 {
                     if (tableauJeu[getIndex1D(i, j)].symbol != '*')
                     {
-                        display(tableauJeu);
                         tableauJeu[getIndex1D(i, j)].number++;
                         tableauJeu[getIndex1D(i, j)].symbol = tableauJeu[getIndex1D(i, j)].number + '0';
                     }
@@ -366,7 +365,7 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* compteCasePla
             if (tableauJeu[index].symbol != 'F' && tableauJeu[index].statut == 0 )
             {
                 tableauJeu[index].statut = 1;
-                tableauJeu[index].symbol = 3;
+                tableauJeu[index].symbol = 'F';
             }
             else if (tableauJeu[index].statut == 1 && tableauJeu[index].number == -1 && tableauJeu[index].symbol == 'F')
             {
@@ -449,7 +448,7 @@ int difficulty(int diff)
 	}
 	else if (diff == 4)
 	{
-		int nbBombe = (int)(round((LIGNE) * (COLONNE)-1));
+		int nbBombe = (int)(round((LIGNE) * (COLONNE)/2));
 		return nbBombe;
 	}
 }
@@ -460,7 +459,7 @@ int main()
         printf("Bonjour vous souhaitez combien de lignes dans cette partie : ");
         LIGNE = askNumberInput(5, INT_MAX);
         printf("Maintenant vous souhaitez combien de colonnes dans cette partie :");
-        COLONNE = askNumberInput(5, INT_MAX);
+        COLONNE = askNumberInput(1, INT_MAX);
 		printf("et enfin vous souhaitez quelle difficulte dans cette partie 1:facile 2:moyenne 3:complique 4:HardcoreSaMaman:");
         DIFFICULTY = askNumberInput(1, 4);
         
