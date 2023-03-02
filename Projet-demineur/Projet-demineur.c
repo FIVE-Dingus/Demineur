@@ -248,7 +248,7 @@ void display(Case* tableauJeu)
     for (int y = 0; y < COLONNE; y++)
     {
         
-        /*if (tableauJeu[getIndex1D(i, y)].statut == 1)
+        if (tableauJeu[getIndex1D(i, y)].statut == 1)
         {
             if (tableauJeu[getIndex1D(i, y)].symbol != '*')
             {
@@ -259,8 +259,8 @@ void display(Case* tableauJeu)
         else
         {
             printf(" ? ");
-        };*/
-        printf(" %c ", tableauJeu[getIndex1D(i, y)].symbol);
+        };
+        //printf(" %c ", tableauJeu[getIndex1D(i, y)].symbol);
     };
     printf("\n");
     }  
