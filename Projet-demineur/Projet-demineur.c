@@ -397,7 +397,7 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
                 compteCasePlayed++;
                 //placeBombe(nbBombe, tableauJeu, tableauDispBombe, tableauBombTaille);
                 memcpy(tableauReveal, tableauJeu, sizeof(Case) * (LIGNE * COLONNE));
-                //revealNearby(ligne, colonne, tableauJeu, compteCasePlayed, 0);
+                revealNearby(ligne, colonne, tableauJeu, compteCasePlayed, 0);
 
                 free(tableauDispBombe);
             }
