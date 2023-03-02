@@ -172,7 +172,7 @@ void looseReveal(Case* tableauReveal)
     printf("\n");
 };
 
-void firstReveal(Case* tableauJeu, int ligne, int colonne, int* tableauDispBombe, int* tableauBombTaille, int *compteCasePlayed)
+void firstReveal(Case* tableauJeu, int ligne, int colonne, int* tableauDispBombe, int* tableauBombTaille, int* compteCasePlayed)
 {
     for (int i = ligne + 3; i >= ligne - 2; i = i - 1)
     {
@@ -190,11 +190,11 @@ void firstReveal(Case* tableauJeu, int ligne, int colonne, int* tableauDispBombe
     };
 }
 
-void revealNearby(int  x, int  y, Case* tableauJeu, int compteCasePlayed, int count)
+void revealNearby(int  x, int  y, Case* tableauJeu, int* compteCasePlayed, int count)
 {
     int index = getIndex1D(x, y);
     tableauJeu[index].statut = 1;
-    compteCasePlayed = compteCasePlayed + 1;
+    *compteCasePlayed = compteCasePlayed + 1;
 
     if (tableauJeu[index].number == 0)
     {
@@ -208,7 +208,7 @@ void revealNearby(int  x, int  y, Case* tableauJeu, int compteCasePlayed, int co
             {
                 if (tableauJeu[getIndex1D(i, j)].statut != 1)
                 {
-                    revealNearby(i, j, tableauJeu, compteCasePlayed, count + 1);
+                    revealNearby(i, j, tableauJeu, &compteCasePlayed, count + 1);
                 }
             };
         };
@@ -415,7 +415,7 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
                     compteCasePlayed = compteCasePlayed + 1;
 
                     revealNearby(ligne, colonne, tableauJeu, &compteCasePlayed, 0);
-                    
+
                     if (compteCasePlayed == (LIGNE * COLONNE) - nbBombe)
                     {
                         printf("Vous avez gagne bande de Gigachad");
@@ -460,12 +460,13 @@ int difficulty(int diff)
 int main()
 {
     while (1) {
-        printf("Bonjour vous souhaitez combien de lignes dans cette partie : ");
-        LIGNE = askNumberInput(2, INT_MAX);
-        printf("Maintenant vous souhaitez combien de colonnes dans cette partie :");
-        COLONNE = askNumberInput(2, INT_MAX);
-        printf("et enfin vous souhaitez quelle difficulte dans cette partie 1:facile 2:moyenne 3:complique 4:HardcoreSaMaman:");
+        printf("Bonjour vous souhaitez quelle difficulte dans cette partie 1:facile 2:moyenne 3:complique 4:HardcoreSaMaman:");
         DIFFICULTY = askNumberInput(1, 4);
+        printf("vous souhaitez combien de lignes dans cette partie : ");
+        LIGNE = askNumberInput(DIFFICULTY + 8, INT_MAX);
+        printf("Maintenant vous souhaitez combien de colonnes dans cette partie :");
+        COLONNE = askNumberInput(DIFFICULTY + 7, INT_MAX);
+
 
         int coordonneesX = 0;
         int coordonneesY = 0;
@@ -496,11 +497,5 @@ int main()
 
 /* a faire */
 
-// première découverte
 // interface graphique
 
-/* erreurs */
-
-
-// erreur sur la victoire
-// dernière verif
