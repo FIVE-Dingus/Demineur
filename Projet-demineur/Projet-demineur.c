@@ -392,10 +392,10 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
                     tableauDispBombe[i] = i;
                 };
 
-                placeBombeDebug(0, 0, tableauJeu);
-                //firstReveal(tableauJeu, ligne, colonne, tableauDispBombe, &tableauBombTaille, compteCasePlayed);
+                //placeBombeDebug(0, 0, tableauJeu);
+                firstReveal(tableauJeu, ligne, colonne, tableauDispBombe, &tableauBombTaille, compteCasePlayed);
                 compteCasePlayed++;
-                //placeBombe(nbBombe, tableauJeu, tableauDispBombe, tableauBombTaille);
+                placeBombe(nbBombe, tableauJeu, tableauDispBombe, tableauBombTaille);
                 memcpy(tableauReveal, tableauJeu, sizeof(Case) * (LIGNE * COLONNE));
                 revealNearby(ligne, colonne, tableauJeu, compteCasePlayed, 0);
 
@@ -415,7 +415,7 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
                     compteCasePlayed = compteCasePlayed + 1;
 
                     revealNearby(ligne, colonne, tableauJeu, compteCasePlayed, 0);
-
+                    
                     if (compteCasePlayed == (LIGNE * COLONNE) - nbBombe)
                     {
                         printf("Vous avez gagne bande de Gigachad");
