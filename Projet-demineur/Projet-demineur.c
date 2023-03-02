@@ -221,7 +221,7 @@ void display(Case* tableauJeu)
     printf("      ");
     for (int y = 0; y < COLONNE; y++)
     {
-        if (y >= 10)
+        if (y >= 9)
         {
             printf("%d ", y + 1);
         }
@@ -250,7 +250,7 @@ void display(Case* tableauJeu)
         
         if (tableauJeu[getIndex1D(i, y)].statut == 1)
         {
-            if (tableauJeu[getIndex1D(i, y)].symbol != '*')
+            if (tableauJeu[getIndex1D(i, y)].symbol != '*' && tableauJeu[getIndex1D(i, y)].symbol != 'F')
             {
                 tableauJeu[getIndex1D(i, y)].symbol = tableauJeu[getIndex1D(i, y)].number + '0';
             };
@@ -364,8 +364,8 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* compteCasePla
         {
             if (tableauJeu[index].symbol != 'F' && tableauJeu[index].statut == 0 )
             {
-                tableauJeu[index].statut = 1;
                 tableauJeu[index].symbol = 'F';
+                tableauJeu[index].statut = 1;                
             }
             else if (tableauJeu[index].statut == 1 && tableauJeu[index].number == -1 && tableauJeu[index].symbol == 'F')
             {
