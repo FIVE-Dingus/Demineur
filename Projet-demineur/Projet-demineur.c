@@ -345,7 +345,7 @@ void placeBombeDebug(int x, int y, Case* tableauJeu)
 
 
 
-void placeBombe(int nbBombe, Case* tableauJeu, int ligne, int colonne, int* tableauDispBombe, int tableauBombTaille)
+void placeBombe(int nbBombe, Case* tableauJeu, int * coordonneesX, int* coordonneesY, int* tableauDispBombe, int tableauBombTaille)
 {
     Case oBombe = { -1,0 ,'*' };
     srand(time(NULL));
@@ -361,9 +361,10 @@ void placeBombe(int nbBombe, Case* tableauJeu, int ligne, int colonne, int* tabl
         tableauBombTaille--;
         tableauDispBombe = realloc(tableauDispBombe, sizeof(int) * tableauBombTaille);
 
+        returnIndex1D(randomIndice, &coordonneesX, &coordonneesY);
 
-        int randomPosX = ligne;
-        int randomPosY = colonne;
+        int randomPosX = coordonneesX;
+        int randomPosY = coordonneesY;
 
         if (tableauJeu[randomPos].number == -1)
         {
@@ -526,7 +527,7 @@ int main()
 
 
 
-        play(tableauJeu, tableauReveal, nbBombe, &compteCasePlayed, tableauDispBombe, tableauBombTaille, coordonneesX, coordonneesY);
+        play(tableauJeu, tableauReveal, nbBombe, &compteCasePlayed, tableauDispBombe, tableauBombTaille, &coordonneesX, &coordonneesY);
 
         printf("Souhaitez vous rejouez, si oui tapez o et si non tapez n : ");
         char reponse = askResponseInput('o', 'n');
