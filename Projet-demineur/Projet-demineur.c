@@ -190,7 +190,7 @@ void firstReveal(Case* tableauJeu, int ligne, int colonne, int* tableauDispBombe
     };
 }
 
-void revealNearby(int  x, int  y, Case* tableauJeu, int* compteCasePlayed, int count)
+void revealNearby(int  x, int  y, Case* tableauJeu, int compteCasePlayed, int count)
 {
     int index = getIndex1D(x, y);
     tableauJeu[index].statut = 1;
@@ -465,8 +465,9 @@ int main()
         printf("vous souhaitez combien de lignes dans cette partie : ");
         LIGNE = askNumberInput(DIFFICULTY + 8, INT_MAX);
         printf("Maintenant vous souhaitez combien de colonnes dans cette partie :");
-        COLONNE = askNumberInput(DIFFICULTY + 7, INT_MAX);
-
+        COLONNE = askNumberInput(2, INT_MAX);
+        printf("et enfin vous souhaitez quelle difficulte dans cette partie 1:facile 2:moyenne 3:complique 4:HardcoreSaMaman:");
+        DIFFICULTY = askNumberInput(1, 4);
 
         int coordonneesX = 0;
         int coordonneesY = 0;
