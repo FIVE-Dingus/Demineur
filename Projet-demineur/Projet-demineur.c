@@ -458,7 +458,7 @@ void game(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
         ligne--;
         colonne--;
         int index = getIndex1D(ligne, colonne);
-
+        clrscr();
         if (choix == 'F' || choix == 'f')
         {
             if (tableauJeu[index].number != -1)
