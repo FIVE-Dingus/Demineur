@@ -24,6 +24,8 @@ int DIFFICULTY = 0;
 
 typedef struct Case
 {
+    // Fonction permettant la création de la structure des case du démineur
+
     int number; //chiffre present dans la case 0 par defaut, -1 pour une bombe ou nb bombe autour 
     int statut; //statut de la case 0 si pas decouvert, 1 si decouvert et -1 pour le drapeau
     char symbol; // symbole montre sur la grille de jeu
@@ -34,6 +36,8 @@ typedef struct Case
 
 void Color(int couleurDuTexte, int couleurDeFond)
 {
+    // fonction permettant de changer la couleur
+
     HANDLE H = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(H, couleurDeFond * 16 + couleurDuTexte);
 }
@@ -41,6 +45,7 @@ void Color(int couleurDuTexte, int couleurDeFond)
 void textColor(Case* tableau, int indice)
 {
     // fonction couleur du texte
+
     if (tableau[indice].number == -1)
     {
         Color(12, 0);
@@ -85,7 +90,7 @@ void textColor(Case* tableau, int indice)
     {
         Color(6, 0);
     }
-        
+
 }
 
 
@@ -104,6 +109,7 @@ int getIndex1D(int i, int j)
 void returnIndex1D(int place, int* coordonneesX, int* coordonneesY)
 {
     //permet de recuperer les coordonnees grâce aux coordonnes de la memoire
+
     *coordonneesY = (place % COLONNE);
 
     *coordonneesX = (place - (place % COLONNE)) / COLONNE;
@@ -122,6 +128,9 @@ void viderBuffer()
 
 int askNumberInput(int min, int max)
 {
+    // Fonction permettant de demander au joueur quelle valeur il veut utiliser
+    // Par la suite cela nous servira pour les lignes et colonnes du démineur
+
     while (1) {
         int input;
         int error = scanf_s("%d", &input);
@@ -141,6 +150,9 @@ int askNumberInput(int min, int max)
 
 char askResponseInput(char c1, char c2)
 {
+    // Fonction permettant de demander au joueur quelle caractère il veut utiliser
+    // Par la suite cela nous servira pour savoir s'il veut poser un drapeau ou découvrir une case
+
     char c3 = toupper(c1);
     char c4 = toupper(c2);
     while (1) {
@@ -162,6 +174,8 @@ char askResponseInput(char c1, char c2)
 
 void positionChoice(int* x, int* y)
 {
+    // Permet de demander à l'utilisateur quelle ligne et colonne il souhaite jouer
+
     printf("Quelle ligne voulez vous jouer ?: ");
     *x = askNumberInput(1, LIGNE);
     printf("Maintenant quelle colonne voulez vous jouer ?: ");
@@ -171,6 +185,8 @@ void positionChoice(int* x, int* y)
 
 void initGrid(Case* tableauJeu)
 {
+    // Permet d'initialiser un tableau avec des cases ayant pour nombre 0 pour statut 0 (non découvert) et pour symbol un 0
+
     Case odefault = { 0,0 ,'0' };
 
     for (int i = 0; i < LIGNE; i++)
@@ -184,6 +200,8 @@ void initGrid(Case* tableauJeu)
 
 void reveal(Case* tableauJeu, int x, int y)
 {
+    // Permet de révéler une case en passant son statut à 1
+
     if (tableauJeu[getIndex1D(x, y)].statut == 0)
     {
         tableauJeu[getIndex1D(x, y)].statut = 1;
@@ -192,6 +210,9 @@ void reveal(Case* tableauJeu, int x, int y)
 
 void looseReveal(Case* tableauReveal)
 {
+    //Permet d'afficher le tableau généré avec tout de révélé
+
+    // Chiffres en haut
     printf("      ");
     for (int i = 0; i < COLONNE; i++)
     {
@@ -207,7 +228,7 @@ void looseReveal(Case* tableauReveal)
     };
     printf("\n\n");
 
-
+    // Chiffres sur le coté et affichage du tableau
     for (int i = 0; i < LIGNE; i++)
     {
         if (i >= 9)
@@ -237,6 +258,8 @@ void looseReveal(Case* tableauReveal)
 
 void firstReveal(Case* tableauJeu, int ligne, int colonne, int* tableauDispBombe, int* tableauBombTaille)
 {
+    //Permet de faire la premièré révélation lorsque l'on joue. C'est à dire que l'on va d'écouvrir 1 cases et les 8 autour (en carré) en statut révélé et pour nombre 0.
+    //Et la case choisi + les 24 cases autour (en carré) comme quoi elles ne peuvent plus être des bombes
     for (int i = ligne + 3; i >= ligne - 2; i = i - 1)
     {
         for (int j = colonne + 3; j >= colonne - 2; j = j - 1)
@@ -254,12 +277,14 @@ void firstReveal(Case* tableauJeu, int ligne, int colonne, int* tableauDispBombe
 
 void revealNearby(int  x, int  y, Case* tableauJeu, int* compteCasePlayed, int count)
 {
+    //Permet de révéler toutes les cases ayant pour nombre 0 autour de celle venant d'être révélé de manière récursive
     int index = getIndex1D(x, y);
     tableauJeu[index].statut = 1;
     *compteCasePlayed = *compteCasePlayed + 1;
 
     if (tableauJeu[index].number == 0)
     {
+        //permet d'encadrer les zones de recherche pour chercher les cases ayant pour nombre 0
         int maxX = max(0, x - 1);
         int minX = min(LIGNE, x + 2);
         int maxY = max(0, y - 1);
@@ -270,6 +295,7 @@ void revealNearby(int  x, int  y, Case* tableauJeu, int* compteCasePlayed, int c
             {
                 if (tableauJeu[getIndex1D(i, j)].statut != 1)
                 {
+                    //récursivité
                     revealNearby(i, j, tableauJeu, compteCasePlayed, count + 1);
                 }
             };
@@ -279,6 +305,9 @@ void revealNearby(int  x, int  y, Case* tableauJeu, int* compteCasePlayed, int c
 
 void display(Case* tableauJeu)
 {
+    //Permet d'afficher les grilles du démineur
+    
+    
     // print colonne
     printf("      ");
     for (int y = 0; y < COLONNE; y++)
@@ -334,6 +363,8 @@ void display(Case* tableauJeu)
 
 void placeBombeDebug(int x, int y, Case* tableauJeu)
 {
+    //Fonction de débug permettant de placer des bombes aux coordonnées souhaitaient
+
     Case oBombe = { -1,0 ,'*' };
     tableauJeu[getIndex1D(x, y)] = oBombe;
 
@@ -360,6 +391,8 @@ void placeBombeDebug(int x, int y, Case* tableauJeu)
 
 void placeBombe(int nbBombe, Case* tableauJeu, int* tableauDispBombe, int tableauBombTaille)
 {
+    //Permet de placer des bombes dans la grille du démineurs de façon aléatoire.
+
     Case oBombe = { -1,0 ,'*' };
     srand(time(NULL));
 
@@ -408,8 +441,9 @@ void placeBombe(int nbBombe, Case* tableauJeu, int* tableauDispBombe, int tablea
 };
 
 
-void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX, int* coordonneesY)
+void game(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX, int* coordonneesY)
 {
+    //Permet de lancer le jeu du démineur 
 
     int compteCasePlayed = 0;
     int gagnant = 0;
@@ -470,7 +504,7 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
             }
             else
             {
-                
+
                 if (tableauJeu[index].number == -1)
                 {
                     looseReveal(tableauReveal);
@@ -501,6 +535,8 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
 
 int difficulty(int diff)
 {
+    //Permet de définir le nombre de bombe totale par rapport à la difficulté choisie
+
     if (diff == 1)
     {
         int nbBombe = (int)round((((LIGNE) * (COLONNE)) / 6.0));
@@ -525,6 +561,7 @@ int difficulty(int diff)
 
 int main(int argc, char* argv[])
 {
+    //SDL
     char title = "lol";
     int x = 2;
     int y = 2;
@@ -532,15 +569,15 @@ int main(int argc, char* argv[])
     int h = 2;
     int flags = 0;
     const char* SDL_GetError(void);
-    SDL_CreateWindow(title,  x,  y,  w,  h, flags);
+    SDL_CreateWindow(title, x, y, w, h, flags);
 
     if (0 != SDL_Init(SDL_INIT_VIDEO))
     {
         fprintf(stderr, "Erreur SDL_Init : %s",
-        SDL_GetError());
+            SDL_GetError());
         return EXIT_FAILURE;
     }
-         
+    //Jeu
     while (1) {
         printf("Bonjour quelle difficulte souhaitez vous utilise dans cette partie,\n1:facile  2:moyenne  3:complique  4:HardcoreSaMaman: ");
         DIFFICULTY = askNumberInput(1, 4);
@@ -549,7 +586,7 @@ int main(int argc, char* argv[])
         printf("Maintenant combien de colonnes souhaitez vous dans cette partie, %d est le nombre minimum: ", DIFFICULTY + 9);
         COLONNE = askNumberInput(DIFFICULTY + 9, INT_MAX);
 
-        
+
 
 
         int coordonneesX = 0;
@@ -563,16 +600,17 @@ int main(int argc, char* argv[])
 
         initGrid(tableauJeu);
 
-        play(tableauJeu, tableauReveal, nbBombe, &coordonneesX, &coordonneesY);
+        game(tableauJeu, tableauReveal, nbBombe, &coordonneesX, &coordonneesY);
 
         printf("Souhaitez vous rejouez, si oui tapez o et si non tapez n : ");
         char reponse = askResponseInput('o', 'n');
 
-        free(tableauJeu);
+        free(tableauJeu); //libère la mémoire
         free(tableauReveal);
 
         if (reponse == 'n')
         {
+            // SDL
             void SDL_Quit(void);
 
             return 0;
