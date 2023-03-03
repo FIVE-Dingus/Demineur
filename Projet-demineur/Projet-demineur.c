@@ -41,6 +41,7 @@ void Color(int couleurDuTexte, int couleurDeFond)
 
 void textColor(Case* tableau, int indice)
 {
+    // fonction couleur du texte
     if (tableau[indice].number == -1)
     {
         Color(12, 0);
@@ -133,7 +134,7 @@ int askNumberInput(int min, int max)
             return input;
         }
         else {
-            printf("Le nombre choisi n'est pas entre %d et %d! ", min, max);
+            printf("Le nombre choisi n'est compris entre %d et %d! ", min, max);
         };
     };
 
@@ -160,9 +161,9 @@ char askResponseInput(char c1, char c2)
 
 void positionChoice(int* x, int* y)
 {
-    printf("Alors quelle ligne veux-tu jouer ?: ");
+    printf("Quelle ligne voulez vous jouer ?: ");
     *x = askNumberInput(1, LIGNE);
-    printf("Maintenant quelle colonne veux-tu jouer ?: ");
+    printf("Maintenant quelle colonne voulez vous jouer ?: ");
     *y = askNumberInput(1, COLONNE);
 };
 
@@ -416,15 +417,15 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
     while (gagnant == 0) {
         system("cls");
         display(tableauJeu);
-        printf("Que souhaitez vous placer d pour un drapeau et c pour casser (d/c) : ");
-        char choix = askResponseInput('d', 'c');
+        printf("Que souhaitez vous faire,\nf pour jouer drapeau et c pour decouvrir une case (f/c) : ");
+        char choix = askResponseInput('f', 'c');
 
         positionChoice(&ligne, &colonne);
         ligne--;
         colonne--;
         int index = getIndex1D(ligne, colonne);
 
-        if (choix == 'd')
+        if (choix == 'f')
         {
             if (tableauJeu[index].symbol != 'F' && tableauJeu[index].statut == 0)
             {
@@ -454,9 +455,8 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
                     tableauDispBombe[i] = i;
                 };
 
-                placeBombeDebug(0, 0, tableauJeu);
                 firstReveal(tableauJeu, ligne, colonne, tableauDispBombe, &tableauBombTaille);
-                //placeBombe(nbBombe, tableauJeu, tableauDispBombe, tableauBombTaille);
+                placeBombe(nbBombe, tableauJeu, tableauDispBombe, tableauBombTaille);
                 memcpy(tableauReveal, tableauJeu, sizeof(Case) * (LIGNE * COLONNE));
                 revealNearby(ligne, colonne, tableauJeu, &compteCasePlayed, 0);
                 free(tableauDispBombe);
@@ -470,6 +470,10 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
                     printf("Vous avez perdu bande de noobz\n\n");
                     gagnant = 1;
                 }
+                else if (tableauJeu[index].statut == 1)
+                {
+                    printf("\nCette case a deja ete jouer. Veuillez jouer une autre case\n");
+                }
                 else if (tableauJeu[index].statut == 0) {
 
                     tableauJeu[index].statut = 1;
@@ -478,13 +482,9 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
                     revealNearby(ligne, colonne, tableauJeu, &compteCasePlayed, 0);
                     if (compteCasePlayed == (LIGNE * COLONNE) - nbBombe)
                     {
-                        printf("Vous avez gagne bande de Gigachad");
+                        printf("Vous avez gagne bande de Gigachad\n\n");
                         gagnant = 2;
                     }
-                }
-                else if (tableauJeu[index].statut == 1)
-                {
-                    printf("\nCette case a deja ete jouer, veuillez jouer autre chose\n");
                 }
             }
 
@@ -529,11 +529,11 @@ int main(int argc, char* argv[])
     }
          
     while (1) {
-        printf("Bonjour vous souhaitez quelle difficulte dans cette partie 1:facile 2:moyenne 3:complique 4:HardcoreSaMaman:");
+        printf("Bonjour quelle difficulte souhaitez vous utilise dans cette partie,\n1:facile  2:moyenne  3:complique  4:HardcoreSaMaman: ");
         DIFFICULTY = askNumberInput(1, 4);
-        printf("vous souhaitez combien de lignes dans cette partie %d est le nombre minimum: ", DIFFICULTY + 9);
+        printf("Combien de lignes souhaitez vous dans cette partie, %d est le nombre minimum: ", DIFFICULTY + 9);
         LIGNE = askNumberInput(DIFFICULTY + 9, INT_MAX);
-        printf("Maintenant vous souhaitez combien de colonnes dans cette partie %d est le nombre minimum: ", DIFFICULTY + 9);
+        printf("Maintenant combien de colonnes souhaitez vous dans cette partie, %d est le nombre minimum: ", DIFFICULTY + 9);
         COLONNE = askNumberInput(DIFFICULTY + 9, INT_MAX);
 
         
