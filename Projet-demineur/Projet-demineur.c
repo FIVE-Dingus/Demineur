@@ -427,7 +427,13 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
 
         if (choix == 'f')
         {
-            if (tableauJeu[index].symbol != 'F' && tableauJeu[index].statut == 0)
+            if (tableauJeu[index].number != -1)
+            {
+                looseReveal(tableauReveal);
+                printf("Vous avez perdu bande de noobz\n\n");
+                gagnant = 1;
+            }
+            else if (tableauJeu[index].symbol != 'F' && tableauJeu[index].statut == 0)
             {
                 tableauJeu[index].symbol = 'F';
                 tableauJeu[index].statut = 1;
@@ -455,6 +461,7 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
                     tableauDispBombe[i] = i;
                 };
 
+                //placeBombeDebug(0, 0, tableauJeu);
                 firstReveal(tableauJeu, ligne, colonne, tableauDispBombe, &tableauBombTaille);
                 placeBombe(nbBombe, tableauJeu, tableauDispBombe, tableauBombTaille);
                 memcpy(tableauReveal, tableauJeu, sizeof(Case) * (LIGNE * COLONNE));
@@ -477,7 +484,6 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
                 else if (tableauJeu[index].statut == 0) {
 
                     tableauJeu[index].statut = 1;
-                    compteCasePlayed = compteCasePlayed + 1;
 
                     revealNearby(ligne, colonne, tableauJeu, &compteCasePlayed, 0);
                     if (compteCasePlayed == (LIGNE * COLONNE) - nbBombe)
