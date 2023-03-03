@@ -393,21 +393,17 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
                     tableauDispBombe[i] = i;
                 };
 
-                placeBombeDebug(0, 0, tableauJeu);
-                //firstReveal(tableauJeu, ligne, colonne, tableauDispBombe, &tableauBombTaille);
-                //placeBombe(nbBombe, tableauJeu, tableauDispBombe, tableauBombTaille);
+                //placeBombeDebug(0, 0, tableauJeu);
+                firstReveal(tableauJeu, ligne, colonne, tableauDispBombe, &tableauBombTaille);
+                placeBombe(nbBombe, tableauJeu, tableauDispBombe, tableauBombTaille);
                 memcpy(tableauReveal, tableauJeu, sizeof(Case) * (LIGNE * COLONNE));
                 revealNearby(ligne, colonne, tableauJeu, &compteCasePlayed, 0);
                 free(tableauDispBombe);
             }
             else
             {
-                if (compteCasePlayed == (LIGNE * COLONNE) - 1)
-                {
-                    printf("Vous avez gagne bande de Gigachad");
-                    gagnant = 2;
-                }
-                else if (tableauJeu[index].number == -1)
+                
+                if (tableauJeu[index].number == -1)
                 {
                     looseReveal(tableauReveal);
                     printf("Vous avez perdu bande de noobz\n\n");
@@ -419,6 +415,11 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
                     compteCasePlayed = compteCasePlayed + 1;
 
                     revealNearby(ligne, colonne, tableauJeu, &compteCasePlayed, 0);
+                    if (compteCasePlayed == (LIGNE * COLONNE) - nbBombe)
+                    {
+                        printf("Vous avez gagne bande de Gigachad");
+                        gagnant = 2;
+                    }
                 }
                 else if (tableauJeu[index].statut == 1)
                 {
