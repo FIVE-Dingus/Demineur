@@ -31,6 +31,63 @@ typedef struct Case
 
 }Case;
 
+#include <windows.h>
+
+void Color(int couleurDuTexte, int couleurDeFond)
+{
+    HANDLE H = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(H, couleurDeFond * 16 + couleurDuTexte);
+}
+
+void textColor(Case* tableau, int indice)
+{
+    if (tableau[indice].number == -1)
+    {
+        Color(12, 0);
+    }
+    else if (tableau[indice].number == 0)
+    {
+        Color(8, 0);
+    }
+    else if (tableau[indice].number == 1)
+    {
+        Color(1, 0);
+    }
+    else if (tableau[indice].number == 2)
+    {
+        Color(11, 0);
+    }
+    else if (tableau[indice].number == 3)
+    {
+        Color(10, 0);
+    }
+    else if (tableau[indice].number == 4)
+    {
+        Color(9, 0);
+    }
+    else if (tableau[indice].number == 5)
+    {
+        Color(4, 0);
+    }
+    else if (tableau[indice].number == 6)
+    {
+        Color(6, 0);
+    }
+    else if (tableau[indice].number == 7)
+    {
+        Color(2, 0);
+    }
+    else if (tableau[indice].number == 8)
+    {
+        Color(13, 0);
+    }
+    else if (tableau[indice].number == 9)
+    {
+        Color(6, 0);
+    }
+        
+}
+
 
 int getIndex1D(int i, int j)
 {
@@ -167,7 +224,9 @@ void looseReveal(Case* tableauReveal)
                 tableauReveal[getIndex1D(i, y)].statut = 1;
                 tableauReveal[getIndex1D(i, y)].symbol = '0';
             };
+            textColor(tableauReveal, getIndex1D(i, y));
             printf(" %c ", tableauReveal[getIndex1D(i, y)].symbol);
+            Color(15, 0);
         };
         printf("\n");
     }
@@ -255,7 +314,9 @@ void display(Case* tableauJeu)
                 {
                     tableauJeu[getIndex1D(i, y)].symbol = tableauJeu[getIndex1D(i, y)].number + '0';
                 };
+                textColor(tableauJeu, getIndex1D(i, y));
                 printf(" %c ", tableauJeu[getIndex1D(i, y)].symbol);
+                Color(15, 0);
             }
             else
             {
@@ -393,9 +454,9 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
                     tableauDispBombe[i] = i;
                 };
 
-                //placeBombeDebug(0, 0, tableauJeu);
+                placeBombeDebug(0, 0, tableauJeu);
                 firstReveal(tableauJeu, ligne, colonne, tableauDispBombe, &tableauBombTaille);
-                placeBombe(nbBombe, tableauJeu, tableauDispBombe, tableauBombTaille);
+                //placeBombe(nbBombe, tableauJeu, tableauDispBombe, tableauBombTaille);
                 memcpy(tableauReveal, tableauJeu, sizeof(Case) * (LIGNE * COLONNE));
                 revealNearby(ligne, colonne, tableauJeu, &compteCasePlayed, 0);
 
