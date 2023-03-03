@@ -195,7 +195,7 @@ void revealNearby(int  x, int  y, Case* tableauJeu, int* compteCasePlayed, int c
 {
     int index = getIndex1D(x, y);
     tableauJeu[index].statut = 1;
-    *compteCasePlayed = compteCasePlayed + 1;
+    *compteCasePlayed = *compteCasePlayed + 1;
 
     if (tableauJeu[index].number == 0)
     {
@@ -393,17 +393,21 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
                     tableauDispBombe[i] = i;
                 };
 
-                //placeBombeDebug(0, 0, tableauJeu);
-                firstReveal(tableauJeu, ligne, colonne, tableauDispBombe, &tableauBombTaille);
-                placeBombe(nbBombe, tableauJeu, tableauDispBombe, tableauBombTaille);
+                placeBombeDebug(0, 0, tableauJeu);
+                //firstReveal(tableauJeu, ligne, colonne, tableauDispBombe, &tableauBombTaille);
+                //placeBombe(nbBombe, tableauJeu, tableauDispBombe, tableauBombTaille);
                 memcpy(tableauReveal, tableauJeu, sizeof(Case) * (LIGNE * COLONNE));
                 revealNearby(ligne, colonne, tableauJeu, &compteCasePlayed, 0);
-
                 free(tableauDispBombe);
             }
             else
             {
-                if (tableauJeu[index].number == -1)
+                if (compteCasePlayed == (LIGNE * COLONNE) - 1)
+                {
+                    printf("Vous avez gagne bande de Gigachad");
+                    gagnant = 2;
+                }
+                else if (tableauJeu[index].number == -1)
                 {
                     looseReveal(tableauReveal);
                     printf("Vous avez perdu bande de noobz\n\n");
@@ -415,12 +419,6 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
                     compteCasePlayed = compteCasePlayed + 1;
 
                     revealNearby(ligne, colonne, tableauJeu, &compteCasePlayed, 0);
-
-                    if (compteCasePlayed == (LIGNE * COLONNE) - nbBombe)
-                    {
-                        printf("Vous avez gagne bande de Gigachad");
-                        gagnant = 2;
-                    }
                 }
                 else if (tableauJeu[index].statut == 1)
                 {
@@ -471,9 +469,9 @@ int main(int argc, char* argv[])
     while (1) {
         printf("Bonjour vous souhaitez quelle difficulte dans cette partie 1:facile 2:moyenne 3:complique 4:HardcoreSaMaman:");
         DIFFICULTY = askNumberInput(1, 4);
-        printf("vous souhaitez combien de lignes dans cette partie %d : ", DIFFICULTY + 9);
+        printf("vous souhaitez combien de lignes dans cette partie %d est le nombre minimum: ", DIFFICULTY + 9);
         LIGNE = askNumberInput(DIFFICULTY + 9, INT_MAX);
-        printf("Maintenant vous souhaitez combien de colonnes dans cette partie %d : ", DIFFICULTY + 9);
+        printf("Maintenant vous souhaitez combien de colonnes dans cette partie %d est le nombre minimum: ", DIFFICULTY + 9);
         COLONNE = askNumberInput(DIFFICULTY + 9, INT_MAX);
 
         
