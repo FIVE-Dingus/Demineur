@@ -11,6 +11,7 @@ int max(int a, int b) { return (a < b) ? b : a; }
 #include <windows.h>
 #include <SDL.h>
 #include <windows.h>
+#include <ctype.h>
 
 SDL_Window* SDL_CreateWindow(const char* title,
     int         x,
@@ -142,6 +143,8 @@ int askNumberInput(int min, int max)
 
 char askResponseInput(char c1, char c2)
 {
+    char c3 = toupper(c1);
+    char c4 = toupper(c2);
     while (1) {
         char input;
         int error = scanf_s("%c", &input, 1);
@@ -149,7 +152,7 @@ char askResponseInput(char c1, char c2)
         if (error == 0) {
             printf("Vous avez entrez un ou des chiffres, entrez %c et %c ! ", c1, c2);
         }
-        else if (input == c1 || input == c2) {
+        else if (input == c1 || input == c2 || input == c3 || input == c4) {
             return input;
         }
         else {
@@ -425,7 +428,7 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
         colonne--;
         int index = getIndex1D(ligne, colonne);
 
-        if (choix == 'f')
+        if (choix == 'F' || choix == 'f')
         {
             if (tableauJeu[index].number != -1)
             {
@@ -449,7 +452,7 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
                 tableauJeu[index].symbol = tableauJeu[index].number + '?';
             }
         }
-        else if (choix == 'c')
+        else if (choix == 'c' || choix == 'C')
         {
             if (compteCasePlayed == 0)
             {
