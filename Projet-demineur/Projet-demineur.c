@@ -12,12 +12,10 @@ int max(int a, int b) { return (a < b) ? b : a; }
 #include <SDL.h>
 #include <windows.h>
 
-SDL_Window* SDL_CreateWindow(const char* title,
-    int         x,
-    int         y,
-    int         w,
-    int         h,
-    Uint32      flags);
+SDL_Window* SDL_CreateWindow(const char* title, int x, int y, int w, int h, int flags)
+{
+
+};
 
 int LIGNE = 10;
 int COLONNE = 10;
@@ -524,7 +522,14 @@ int difficulty(int diff)
 
 int main(int argc, char* argv[])
 {
+    char title = "lol";
+    int x = 2;
+    int y = 2;
+    int w = 2;
+    int h = 2;
+    int flags = 0;
     const char* SDL_GetError(void);
+    SDL_CreateWindow(title,  x,  y,  w,  h, flags);
 
     if (0 != SDL_Init(SDL_INIT_VIDEO))
     {
