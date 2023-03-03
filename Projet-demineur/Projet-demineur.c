@@ -415,7 +415,6 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
     int ligne;
     int colonne;
     while (gagnant == 0) {
-        system("cls");
         display(tableauJeu);
         printf("Que souhaitez vous faire,\nf pour jouer drapeau et c pour decouvrir une case (f/c) : ");
         char choix = askResponseInput('f', 'c');
@@ -424,7 +423,7 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
         ligne--;
         colonne--;
         int index = getIndex1D(ligne, colonne);
-
+        system("cls");
         if (choix == 'f')
         {
             if (tableauJeu[index].number != -1)
@@ -479,7 +478,7 @@ void play(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
                 }
                 else if (tableauJeu[index].statut == 1)
                 {
-                    printf("\nCette case a deja ete jouer. Veuillez jouer une autre case\n");
+                    printf("\nCette case a deja ete jouer. Veuillez jouer une autre case\n\n");
                 }
                 else if (tableauJeu[index].statut == 0) {
 
