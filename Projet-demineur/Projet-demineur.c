@@ -566,6 +566,36 @@ int setWindowColor(SDL_Renderer* renderer, SDL_Color color)
    return 0;
    }
 
+
+void graphiqueGrid(SDL_Window* renderer)
+{
+    // init grille
+    int col;
+    int lign = 50;
+    int count = 0;
+    for (int i = 0; i <= 10; i++)
+    {
+        col = 80;
+        for (int j = 0; j <= 10; j++)
+        {
+            if (count % 2 == 0)
+            {
+                SDL_SetRenderDrawColor(renderer, 0, 100, 0, 255); //On dessine en vert foncé
+            }
+            else
+            {
+                SDL_SetRenderDrawColor(renderer, 0, 150, 0, 255); //On dessine en vert clair
+            }
+            SDL_Rect rect = { col, lign, 50, 50 };
+            SDL_RenderFillRect(renderer, &rect);
+
+            col = col + 50;
+            count++;
+        }
+        lign = lign + 50;
+    }
+};
+
 int main(int argc, char* argv[])
 {
     //SDL
@@ -618,32 +648,7 @@ int main(int argc, char* argv[])
     //SDL_RenderCopy(renderer, texture, NULL, &dst);
 
 
-    // init grille
-    int col = 80;
-    int lign = 50;
-    int count = 0;
-    for (int i = 0; i <= 10; i++)
-    {
-        for (int j = 0; j <= 10; j++)
-        {
-            if (count % 2 == 0 )
-            {
-                SDL_SetRenderDrawColor(renderer, 0, 100, 0, 255); //On dessine en vert foncé
-            }
-            else
-            {
-                SDL_SetRenderDrawColor(renderer, 0, 150, 0, 255); //On dessine en vert clair
-            }
-            SDL_Rect rect = { col, lign, 50, 50 };
-            SDL_RenderFillRect(renderer, &rect);
-
-            col = col + 50;
-            count++;
-        }
-        col = 80;
-        lign = lign + 50;
-    }
-
+    graphiqueGrid(renderer);
 
     SDL_RenderPresent(renderer);
     SDL_Delay(5000);
