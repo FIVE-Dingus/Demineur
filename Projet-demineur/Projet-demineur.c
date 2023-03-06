@@ -563,40 +563,63 @@ int main(int argc, char* argv[])
     SDL_Window* window = NULL;
     SDL_Window* renderer = NULL;
     int statut = EXIT_FAILURE;
-    Uint32 retour = SDL_GetWindowFlags(window);
+    SDL_Color orange = { 255, 127, 40, 255 };
 
-
-    if (retour & SDL_WINDOW_RESIZABLE)
-        printf("La fenetre est redimensionnable");
-    else if (retour & (SDL_WINDOW_RESIZABLE | SDL_WINDOW_BORDERLESS))
-        printf("La fenetre est redimensionnable et n’a pas de bordure");
-
-    
-        if (0 != SDL_Init(SDL_INIT_VIDEO))
+    /* Initialisation, création de la fenêtre et du renderer. */
+    if (0 != SDL_Init(SDL_INIT_VIDEO))
         {
         fprintf(stderr, "Erreur SDL_Init : %s",
             SDL_GetError());
         goto Quit;
         }
-    window = SDL_CreateWindow("SDL2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("SDL2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_RESIZABLE);
     if (NULL == window)
         {
         fprintf(stderr, "Erreur SDL_CreateWindow : %s",
             SDL_GetError());
         goto Quit;
         }
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    if (NULL == renderer)
+        {
+        fprintf(stderr, "Erreur SDL_CreateRenderer : %s",
+            SDL_GetError());
+        goto Quit;
+        }
 
-    //renderer = SDL_CreateRenderer(SDL_Window * window, int index, Uint32 flags);
-    
+    if (0 != SDL_SetRenderDrawColor(renderer, orange.r,
+        orange.g, orange.b, orange.a))
+        {
+        fprintf(stderr,
+            "Erreur SDL_SetRenderDrawColor : %s",
+            SDL_GetError());
+        goto Quit;
+        }
+   
+    if (0 != SDL_RenderClear(renderer))
+    {
+        fprintf(stderr,
+            "Erreur SDL_SetRenderDrawColor : %s",
+            SDL_GetError());
+        goto Quit;
+       
+    }
+   
+    SDL_Delay(500);
+    SDL_RenderPresent(renderer);
+    SDL_Delay(500);
+   
         statut = EXIT_SUCCESS;
-    SDL_Delay(3000);
-    SDL_DestroyWindow(window);
-    Quit:
+   
+        Quit:
+    if (NULL != renderer)
+        SDL_DestroyRenderer(renderer);
+    if (NULL != window)
+        SDL_DestroyWindow(window);
     SDL_Quit();
     return statut;
-
-
-
+   
+   
 
     //Jeu
     while (1) {
