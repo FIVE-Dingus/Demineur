@@ -17,6 +17,7 @@ int max(int a, int b) { return (a < b) ? b : a; }
 int LIGNE = 10;
 int COLONNE = 10;
 int DIFFICULTY = 0;
+char GRAPH = ' ';
 
 typedef struct Case
 {
@@ -660,8 +661,8 @@ int main(int argc, char* argv[])
         LIGNE = askNumberInput(DIFFICULTY + 9, INT_MAX);
         printf("Maintenant combien de colonnes souhaitez vous dans cette partie, %d est le nombre minimum: ", DIFFICULTY + 9);
         COLONNE = askNumberInput(DIFFICULTY + 9, INT_MAX);
-        printf("Voulez vous jouer avec la console ou l'interface graphique: ");
-        COLONNE = askNumberInput(DIFFICULTY + 9, INT_MAX);
+        printf("Voulez vous jouer avec la console 'c' ou l'interface graphique 'g' : ");
+        GRAPH = askResponseInput('c','g')
 
 
 
