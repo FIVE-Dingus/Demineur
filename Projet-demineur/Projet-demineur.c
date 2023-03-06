@@ -648,23 +648,8 @@ int main(int argc, char* argv[])
     //SDL_RenderCopy(renderer, texture, NULL, &dst);
 
 
-    graphiqueGrid(renderer);
-
-    SDL_RenderPresent(renderer);
-    SDL_Delay(5000);
    
-        statut = EXIT_SUCCESS;
-   
-    Quit:
-        if (NULL != texture)
-            SDL_DestroyTexture(texture);
-        if (NULL != renderer)
-            SDL_DestroyRenderer(renderer);
-        if (NULL != window)
-            SDL_DestroyWindow(window);
-        SDL_Quit();
-    return statut;
-   
+  
    
 
     //Jeu
@@ -675,9 +660,17 @@ int main(int argc, char* argv[])
         LIGNE = askNumberInput(DIFFICULTY + 9, INT_MAX);
         printf("Maintenant combien de colonnes souhaitez vous dans cette partie, %d est le nombre minimum: ", DIFFICULTY + 9);
         COLONNE = askNumberInput(DIFFICULTY + 9, INT_MAX);
+        printf("Voulez vous jouer avec la console ou l'interface graphique: ");
+        COLONNE = askNumberInput(DIFFICULTY + 9, INT_MAX);
 
 
 
+        graphiqueGrid(renderer);
+
+        SDL_RenderPresent(renderer);
+        SDL_Delay(5000);
+
+        statut = EXIT_SUCCESS;
 
         int coordonneesX = 0;
         int coordonneesY = 0;
@@ -700,6 +693,15 @@ int main(int argc, char* argv[])
 
         if (reponse == 'n')
         {
+        Quit:
+            if (NULL != texture)
+                SDL_DestroyTexture(texture);
+            if (NULL != renderer)
+                SDL_DestroyRenderer(renderer);
+            if (NULL != window)
+                SDL_DestroyWindow(window);
+            SDL_Quit();
+            return statut;
             return 0;
         }
 
