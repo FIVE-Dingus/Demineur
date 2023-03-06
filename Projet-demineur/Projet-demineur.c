@@ -574,10 +574,10 @@ void graphiqueGrid(SDL_Window* renderer)
     int col;
     int lign = 50;
     int count = 0;
-    for (int i = 0; i <= 10; i++)
+    for (int i = 0; i < LIGNE; i++)
     {
         col = 80;
-        for (int j = 0; j <= 10; j++)
+        for (int j = 0; j < COLONNE; j++)
         {
             if (count % 2 == 0)
             {
@@ -597,7 +597,7 @@ void graphiqueGrid(SDL_Window* renderer)
     }
 };
 
-int main(int argc, char* argv[])
+int main()
 {
     //SDL
 
@@ -611,32 +611,32 @@ int main(int argc, char* argv[])
 
     /* Initialisation, création de la fenêtre et du renderer. */
     if (0 != SDL_Init(SDL_INIT_VIDEO))
-        {
+    {
         fprintf(stderr, "Erreur SDL_Init : %s",
             SDL_GetError());
         goto Quit;
-        }
+    }
     window = SDL_CreateWindow("SDL2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 900, 700, SDL_WINDOW_RESIZABLE);
     if (NULL == window)
-        {
+    {
         fprintf(stderr, "Erreur SDL_CreateWindow : %s",
             SDL_GetError());
         goto Quit;
-        }
+    }
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (NULL == renderer)
-        {
+    {
         fprintf(stderr, "Erreur SDL_CreateRenderer : %s",
             SDL_GetError());
         goto Quit;
-        }
+    }
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 200, 200);
     if (NULL == texture)
-        {
+    {
         fprintf(stderr, "Erreur SDL_CreateTexture : %s",
             SDL_GetError());
         goto Quit;
-        }
+    }
     // background
     setWindowColor(renderer, orange);
     // grille de jeu
@@ -645,14 +645,30 @@ int main(int argc, char* argv[])
     SDL_RenderFillRect(renderer, &rectGrille);
 
 
+    statut = EXIT_SUCCESS;
+
     //SDL_Rect dst = { 0, 0, 50, 50 };
     //SDL_RenderCopy(renderer, texture, NULL, &dst);
 
+    graphiqueGrid(renderer);
 
-   
-  
-   
+    SDL_RenderPresent(renderer);
+    SDL_Delay(5000);
+Quit:
+    if (NULL != texture)
+        SDL_DestroyTexture(texture);
+    if (NULL != renderer)
+        SDL_DestroyRenderer(renderer);
+    if (NULL != window)
+        SDL_DestroyWindow(window);
+    SDL_Quit();
+    return statut;
 
+    return 0;
+}
+
+int main2()
+{
     //Jeu
     while (1) {
         printf("Bonjour quelle difficulte souhaitez vous utilise dans cette partie,\n1:facile  2:moyenne  3:complique  4:HardcoreSaMaman: ");
@@ -664,23 +680,10 @@ int main(int argc, char* argv[])
         printf("Voulez vous jouer avec la console 'c' ou l'interface graphique 'g' : ");
         GRAPH = askResponseInput('c', 'g');
 
-
-
-        statut = EXIT_SUCCESS;
-
         int coordonneesX = 0;
         int coordonneesY = 0;
         int nbBombe = difficulty(DIFFICULTY);
         int nbFlag = nbBombe;
-        if (GRAPH == 'g')
-        {
-            graphiqueGrid(renderer);
-
-            SDL_RenderPresent(renderer);
-            SDL_Delay(5000);
-        }
-        else
-        {
 
             Case* tableauJeu = malloc(sizeof(Case) * (LIGNE * COLONNE));
             Case* tableauReveal = malloc(sizeof(Case) * (LIGNE * COLONNE));
@@ -695,21 +698,12 @@ int main(int argc, char* argv[])
 
             free(tableauJeu); //libère la mémoire
             free(tableauReveal);
-        }
+
             printf("Souhaitez vous rejouez, si oui tapez o et si non tapez n : ");
             char reponse = askResponseInput('o', 'n');
 
-            if (reponse == 'n')
+            if (reponse == 'n' || reponse == 'N')
             {
-            Quit:
-                if (NULL != texture)
-                    SDL_DestroyTexture(texture);
-                if (NULL != renderer)
-                    SDL_DestroyRenderer(renderer);
-                if (NULL != window)
-                    SDL_DestroyWindow(window);
-                SDL_Quit();
-                return statut;
                 return 0;
             }
     }
