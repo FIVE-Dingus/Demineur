@@ -573,6 +573,7 @@ int main(int argc, char* argv[])
     //init SDL page et renderer
     SDL_Window* window = NULL;
     SDL_Window* renderer = NULL;
+    SDL_Texture* texture = NULL;
     int statut = EXIT_FAILURE;
     SDL_Color orange = { 255, 127, 40, 255 };
 
@@ -597,51 +598,39 @@ int main(int argc, char* argv[])
             SDL_GetError());
         goto Quit;
         }
+    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 200, 200);
+    if (NULL == texture)
+        {
+        fprintf(stderr, "Erreur SDL_CreateTexture : %s",
+            SDL_GetError());
+        goto Quit;
+        }
+
 
     /* Color */
-    /*
-    SDL_Point point[640];
-    SDL_SetRenderDrawColor(renderer, 12, 13, 0, 255);
-    size_t i = 0;
-    for (i = 0; i < 640; i++)
-        {
-        point[i].x = i;
-        point[i].y = i+1;
-        }
-    SDL_RenderDrawPoints(renderer, point, 640);
-    SDL_RenderPresent(renderer);*/
+    SDL_Rect rect = { 50, 50, 100, 100 };
+    SDL_SetRenderDrawColor(renderer, 244, 0, 150, 255); /* On dessine en violet */
+    SDL_SetRenderTarget(renderer, texture); /* On va dessiner sur la texture */
+    SDL_RenderFillRect(renderer, &rect);
+    SDL_SetRenderTarget(renderer, NULL);
 
-    setWindowColor(renderer, orange);
-    SDL_Point point[5];
-    point[0].x = 100;
-    point[0].y = 100;
-    point[1].x = 200;
-    point[1].y = 100;
-    point[2].x = 200;
-    point[2].y = 200;
-    point[3].x = 100;
-    point[3].y = 200;
-    point[4].x = 100;
-    point[4].y = 100;
-    SDL_RenderDrawLines(renderer, point, 5);
+   
+    SDL_Rect dst = { 0, 0, 50, 50 };
+    SDL_RenderCopy(renderer, texture, NULL, &dst);
+
     SDL_RenderPresent(renderer);
-
-
-
-
-
     SDL_Delay(1000);
-    SDL_RenderPresent(renderer);
-    SDL_Delay(500);
    
         statut = EXIT_SUCCESS;
    
-        Quit:
-    if (NULL != renderer)
-        SDL_DestroyRenderer(renderer);
-    if (NULL != window)
-        SDL_DestroyWindow(window);
-    SDL_Quit();
+    Quit:
+        if (NULL != texture)
+            SDL_DestroyTexture(texture);
+        if (NULL != renderer)
+            SDL_DestroyRenderer(renderer);
+        if (NULL != window)
+            SDL_DestroyWindow(window);
+        SDL_Quit();
     return statut;
    
    
