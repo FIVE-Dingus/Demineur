@@ -563,7 +563,6 @@ int main(int argc, char* argv[])
     SDL_Window* window = NULL;
     SDL_Window* renderer = NULL;
     int statut = EXIT_FAILURE;
-
     Uint32 retour = SDL_GetWindowFlags(window);
 
 
@@ -579,9 +578,7 @@ int main(int argc, char* argv[])
             SDL_GetError());
         goto Quit;
         }
-    window = SDL_CreateWindow("SDL2", SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        640, 480, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("SDL2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
     if (NULL == window)
         {
         fprintf(stderr, "Erreur SDL_CreateWindow : %s",
@@ -589,7 +586,7 @@ int main(int argc, char* argv[])
         goto Quit;
         }
 
-    //renderer = SDL_Renderer * SDL_CreateRenderer(SDL_Window * window, int index, Uint32 flags);
+    //renderer = SDL_CreateRenderer(SDL_Window * window, int index, Uint32 flags);
     
         statut = EXIT_SUCCESS;
     SDL_Delay(3000);
