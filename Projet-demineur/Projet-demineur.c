@@ -13,15 +13,6 @@ int max(int a, int b) { return (a < b) ? b : a; }
 #include <windows.h>
 #include <ctype.h>
 
-//SDL
-SDL_Window* SDL_CreateWindow(const char* title, int x, int y, int w, int h, Uint32 flags)
-{
-
-};
-
-void SDL_Delay(Uint32 ms);
-void SDL_DestroyWindow(SDL_Window* window);
-
 
 int LIGNE = 10;
 int COLONNE = 10;
@@ -463,7 +454,7 @@ void game(Case* tableauJeu, Case* tableauReveal, int nbBombe, int* coordonneesX,
         ligne--;
         colonne--;
         int index = getIndex1D(ligne, colonne);
-        clrscr();
+        //système("cls");
         if (choix == 'F' || choix == 'f')
         {
             if (tableauJeu[index].number != -1)
@@ -567,17 +558,20 @@ int difficulty(int diff)
 int main(int argc, char* argv[])
 {
     //SDL
-    char title = "Démineur";
-    int x = 2;
-    int y = 2;
-    int w = 2;
-    int h = 2;
-    Uint32 flags = SDL_WINDOW_SHOWN;
-    const char* SDL_GetError(void);
-    SDL_CreateWindow(title, x, y, w, h, flags);
 
+    //init SDL page et renderer
     SDL_Window* window = NULL;
+    SDL_Window* renderer = NULL;
     int statut = EXIT_FAILURE;
+
+    Uint32 retour = SDL_GetWindowFlags(window);
+
+
+    if (retour & SDL_WINDOW_RESIZABLE)
+        printf("La fenetre est redimensionnable");
+    else if (retour & (SDL_WINDOW_RESIZABLE | SDL_WINDOW_BORDERLESS))
+        printf("La fenetre est redimensionnable et n’a pas de bordure");
+
     
         if (0 != SDL_Init(SDL_INIT_VIDEO))
         {
@@ -594,6 +588,8 @@ int main(int argc, char* argv[])
             SDL_GetError());
         goto Quit;
         }
+
+    //renderer = SDL_Renderer * SDL_CreateRenderer(SDL_Window * window, int index, Uint32 flags);
     
         statut = EXIT_SUCCESS;
     SDL_Delay(3000);
