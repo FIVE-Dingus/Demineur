@@ -666,44 +666,52 @@ int main(int argc, char* argv[])
 
 
 
-        graphiqueGrid(renderer);
-
-        SDL_RenderPresent(renderer);
-        SDL_Delay(5000);
-
         statut = EXIT_SUCCESS;
 
         int coordonneesX = 0;
         int coordonneesY = 0;
         int nbBombe = difficulty(DIFFICULTY);
         int nbFlag = nbBombe;
-
-        Case* tableauJeu = malloc(sizeof(Case) * (LIGNE * COLONNE));
-        Case* tableauReveal = malloc(sizeof(Case) * (LIGNE * COLONNE));
-
-
-        initGrid(tableauJeu);
-
-        game(tableauJeu, tableauReveal, nbBombe, &coordonneesX, &coordonneesY);
-
-        printf("Souhaitez vous rejouez, si oui tapez o et si non tapez n : ");
-        char reponse = askResponseInput('o', 'n');
-
-        free(tableauJeu); //libère la mémoire
-        free(tableauReveal);
-
-        if (reponse == 'n')
+        if (GRAPH == )
         {
-        Quit:
-            if (NULL != texture)
-                SDL_DestroyTexture(texture);
-            if (NULL != renderer)
-                SDL_DestroyRenderer(renderer);
-            if (NULL != window)
-                SDL_DestroyWindow(window);
-            SDL_Quit();
-            return statut;
-            return 0;
+            graphiqueGrid(renderer);
+
+            SDL_RenderPresent(renderer);
+            SDL_Delay(5000);
+        }
+        else
+        {
+
+            Case* tableauJeu = malloc(sizeof(Case) * (LIGNE * COLONNE));
+            Case* tableauReveal = malloc(sizeof(Case) * (LIGNE * COLONNE));
+
+
+            initGrid(tableauJeu);
+
+            game(tableauJeu, tableauReveal, nbBombe, &coordonneesX, &coordonneesY);
+
+            
+
+
+            free(tableauJeu); //libère la mémoire
+            free(tableauReveal);
+        }
+            printf("Souhaitez vous rejouez, si oui tapez o et si non tapez n : ");
+            char reponse = askResponseInput('o', 'n');
+
+            if (reponse == 'n')
+            {
+            Quit:
+                if (NULL != texture)
+                    SDL_DestroyTexture(texture);
+                if (NULL != renderer)
+                    SDL_DestroyRenderer(renderer);
+                if (NULL != window)
+                    SDL_DestroyWindow(window);
+                SDL_Quit();
+                return statut;
+                return 0;
+            }
         }
 
     }
