@@ -662,7 +662,7 @@ int main(int argc, char* argv[])
         printf("Maintenant combien de colonnes souhaitez vous dans cette partie, %d est le nombre minimum: ", DIFFICULTY + 9);
         COLONNE = askNumberInput(DIFFICULTY + 9, INT_MAX);
         printf("Voulez vous jouer avec la console 'c' ou l'interface graphique 'g' : ");
-        GRAPH = askResponseInput('c','g')
+        GRAPH = askResponseInput('c', 'g');
 
 
 
@@ -672,7 +672,7 @@ int main(int argc, char* argv[])
         int coordonneesY = 0;
         int nbBombe = difficulty(DIFFICULTY);
         int nbFlag = nbBombe;
-        if (GRAPH == )
+        if (GRAPH == 'g')
         {
             graphiqueGrid(renderer);
 
@@ -712,8 +712,6 @@ int main(int argc, char* argv[])
                 return statut;
                 return 0;
             }
-        }
-
     }
 };
 
