@@ -607,19 +607,35 @@ int main(int argc, char* argv[])
         }
 
 
-    /* Color */
-    SDL_Rect rect = { 50, 50, 100, 100 };
-    SDL_SetRenderDrawColor(renderer, 244, 0, 150, 255); /* On dessine en violet */
-    SDL_SetRenderTarget(renderer, texture); /* On va dessiner sur la texture */
-    SDL_RenderFillRect(renderer, &rect);
-    SDL_SetRenderTarget(renderer, NULL);
 
-   
-    SDL_Rect dst = { 0, 0, 50, 50 };
-    SDL_RenderCopy(renderer, texture, NULL, &dst);
+
+    //SDL_Rect dst = { 0, 0, 50, 50 };
+    //SDL_RenderCopy(renderer, texture, NULL, &dst);
+
+    /* Color */
+
+    int col = 50;
+    for (int z = 0; z <= 10; z++)
+    {
+        if (z % 2 == 0)
+        {
+            printf("bleu\n");
+            SDL_SetRenderDrawColor(renderer, 10, 0, 150, 255); //On dessine en bleu
+        }
+        else
+        {
+            printf("violet\n");
+            SDL_SetRenderDrawColor(renderer, 244, 0, 150, 255); //On dessine en violet
+        }
+        SDL_Rect rect = { col, 50, 50, 50 };
+        SDL_RenderFillRect(renderer, &rect);
+
+        col = col + 50;
+    }
+
 
     SDL_RenderPresent(renderer);
-    SDL_Delay(1000);
+    SDL_Delay(5000);
    
         statut = EXIT_SUCCESS;
    
