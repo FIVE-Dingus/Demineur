@@ -620,12 +620,12 @@ int main(int argc, char* argv[])
         if (z % 2 == 0)
         {
             printf("bleu\n");
-            SDL_SetRenderDrawColor(renderer, 10, 0, 150, 255); //On dessine en bleu
+            SDL_SetRenderDrawColor(renderer, 0, 100, 0, 255); //On dessine en vert foncé
         }
         else
         {
             printf("violet\n");
-            SDL_SetRenderDrawColor(renderer, 244, 0, 150, 255); //On dessine en violet
+            SDL_SetRenderDrawColor(renderer, 0, 150, 0, 255); //On dessine en vert clair
         }
         SDL_Rect rect = { col, 50, 50, 50 };
         SDL_RenderFillRect(renderer, &rect);
