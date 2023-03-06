@@ -555,6 +555,17 @@ int difficulty(int diff)
     }
 }
 
+// SDL
+int setWindowColor(SDL_Renderer* renderer, SDL_Color color)
+{
+   if (SDL_SetRenderDrawColor(renderer, color.r, color.g,
+        color.b, color.a) < 0)
+       return -1;
+   if (SDL_RenderClear(renderer) < 0)
+       return -1;
+   return 0;
+   }
+
 int main(int argc, char* argv[])
 {
     //SDL
@@ -587,25 +598,39 @@ int main(int argc, char* argv[])
         goto Quit;
         }
 
-    if (0 != SDL_SetRenderDrawColor(renderer, orange.r,
-        orange.g, orange.b, orange.a))
+    /* Color */
+    /*
+    SDL_Point point[640];
+    SDL_SetRenderDrawColor(renderer, 12, 13, 0, 255);
+    size_t i = 0;
+    for (i = 0; i < 640; i++)
         {
-        fprintf(stderr,
-            "Erreur SDL_SetRenderDrawColor : %s",
-            SDL_GetError());
-        goto Quit;
+        point[i].x = i;
+        point[i].y = i+1;
         }
-   
-    if (0 != SDL_RenderClear(renderer))
-    {
-        fprintf(stderr,
-            "Erreur SDL_SetRenderDrawColor : %s",
-            SDL_GetError());
-        goto Quit;
-       
-    }
-   
-    SDL_Delay(500);
+    SDL_RenderDrawPoints(renderer, point, 640);
+    SDL_RenderPresent(renderer);*/
+
+    setWindowColor(renderer, orange);
+    SDL_Point point[5];
+    point[0].x = 100;
+    point[0].y = 100;
+    point[1].x = 200;
+    point[1].y = 100;
+    point[2].x = 200;
+    point[2].y = 200;
+    point[3].x = 100;
+    point[3].y = 200;
+    point[4].x = 100;
+    point[4].y = 100;
+    SDL_RenderDrawLines(renderer, point, 5);
+    SDL_RenderPresent(renderer);
+
+
+
+
+
+    SDL_Delay(1000);
     SDL_RenderPresent(renderer);
     SDL_Delay(500);
    
