@@ -575,7 +575,8 @@ int main(int argc, char* argv[])
     SDL_Window* renderer = NULL;
     SDL_Texture* texture = NULL;
     int statut = EXIT_FAILURE;
-    SDL_Color orange = { 255, 127, 40, 255 };
+    SDL_Color orange = { 100, 100, 100, 255 };
+
 
     /* Initialisation, création de la fenêtre et du renderer. */
     if (0 != SDL_Init(SDL_INIT_VIDEO))
@@ -584,7 +585,7 @@ int main(int argc, char* argv[])
             SDL_GetError());
         goto Quit;
         }
-    window = SDL_CreateWindow("SDL2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_RESIZABLE);
+    window = SDL_CreateWindow("SDL2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 900, 700, SDL_WINDOW_RESIZABLE);
     if (NULL == window)
         {
         fprintf(stderr, "Erreur SDL_CreateWindow : %s",
@@ -605,32 +606,42 @@ int main(int argc, char* argv[])
             SDL_GetError());
         goto Quit;
         }
-
-
+    // background
+    setWindowColor(renderer, orange);
+    // grille de jeu
+    SDL_SetRenderDrawColor(renderer, 128, 128, 128, 255); //On dessine en vert foncé
+    SDL_Rect rectGrille = { 50, 50, 800, 600 };
+    SDL_RenderFillRect(renderer, &rectGrille);
 
 
     //SDL_Rect dst = { 0, 0, 50, 50 };
     //SDL_RenderCopy(renderer, texture, NULL, &dst);
 
-    /* Color */
 
-    int col = 50;
-    for (int z = 0; z <= 10; z++)
+    // init grille
+    int col = 80;
+    int lign = 50;
+    int count = 0;
+    for (int i = 0; i <= 10; i++)
     {
-        if (z % 2 == 0)
+        for (int j = 0; j <= 10; j++)
         {
-            printf("bleu\n");
-            SDL_SetRenderDrawColor(renderer, 0, 100, 0, 255); //On dessine en vert foncé
-        }
-        else
-        {
-            printf("violet\n");
-            SDL_SetRenderDrawColor(renderer, 0, 150, 0, 255); //On dessine en vert clair
-        }
-        SDL_Rect rect = { col, 50, 50, 50 };
-        SDL_RenderFillRect(renderer, &rect);
+            if (count % 2 == 0 )
+            {
+                SDL_SetRenderDrawColor(renderer, 0, 100, 0, 255); //On dessine en vert foncé
+            }
+            else
+            {
+                SDL_SetRenderDrawColor(renderer, 0, 150, 0, 255); //On dessine en vert clair
+            }
+            SDL_Rect rect = { col, lign, 50, 50 };
+            SDL_RenderFillRect(renderer, &rect);
 
-        col = col + 50;
+            col = col + 50;
+            count++;
+        }
+        col = 80;
+        lign = lign + 50;
     }
 
 
