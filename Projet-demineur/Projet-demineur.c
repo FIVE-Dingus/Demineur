@@ -13,10 +13,15 @@ int max(int a, int b) { return (a < b) ? b : a; }
 #include <windows.h>
 #include <ctype.h>
 
-SDL_Window* SDL_CreateWindow(const char* title, int x, int y, int w, int h, int flags)
+//SDL
+SDL_Window* SDL_CreateWindow(const char* title, int x, int y, int w, int h, Uint32 flags)
 {
 
 };
+
+void SDL_Delay(Uint32 ms);
+void SDL_DestroyWindow(SDL_Window* window);
+
 
 int LIGNE = 10;
 int COLONNE = 10;
@@ -562,21 +567,44 @@ int difficulty(int diff)
 int main(int argc, char* argv[])
 {
     //SDL
-    char title = "lol";
+    char title = "Démineur";
     int x = 2;
     int y = 2;
     int w = 2;
     int h = 2;
-    int flags = 0;
+    Uint32 flags = SDL_WINDOW_SHOWN;
     const char* SDL_GetError(void);
     SDL_CreateWindow(title, x, y, w, h, flags);
 
-    if (0 != SDL_Init(SDL_INIT_VIDEO))
-    {
+    SDL_Window* window = NULL;
+    int statut = EXIT_FAILURE;
+    
+        if (0 != SDL_Init(SDL_INIT_VIDEO))
+        {
         fprintf(stderr, "Erreur SDL_Init : %s",
             SDL_GetError());
-        return EXIT_FAILURE;
-    }
+        goto Quit;
+        }
+    window = SDL_CreateWindow("SDL2", SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED,
+        640, 480, SDL_WINDOW_SHOWN);
+    if (NULL == window)
+        {
+        fprintf(stderr, "Erreur SDL_CreateWindow : %s",
+            SDL_GetError());
+        goto Quit;
+        }
+    
+        statut = EXIT_SUCCESS;
+    SDL_Delay(3000);
+    SDL_DestroyWindow(window);
+    Quit:
+    SDL_Quit();
+    return statut;
+
+
+
+
     //Jeu
     while (1) {
         printf("Bonjour quelle difficulte souhaitez vous utilise dans cette partie,\n1:facile  2:moyenne  3:complique  4:HardcoreSaMaman: ");
@@ -610,9 +638,6 @@ int main(int argc, char* argv[])
 
         if (reponse == 'n')
         {
-            // SDL
-            void SDL_Quit(void);
-
             return 0;
         }
 
