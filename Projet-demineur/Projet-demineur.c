@@ -637,8 +637,18 @@ int graphiqueIndice(int x, int y)
 void changeTexture(SDL_Window* renderer, SDL_Texture* texture, int x, int y)
 {
     //30 décallage
+    int posY = 0;
+    int posX = 0;
 
     int indice = graphiqueIndice(x, y);
+
+    for (int i = 0; i < LIGNE; i++)
+    {
+        for (int j = 0; j < COLONNE; j++) 
+        {
+            posY = posY + GAP_Y + (LENGTH * )
+        }
+    }
 
 
     SDL_Rect dst = { x + 30, y, 50, 50 };
