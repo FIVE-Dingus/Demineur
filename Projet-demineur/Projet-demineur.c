@@ -13,11 +13,16 @@ int max(int a, int b) { return (a < b) ? b : a; }
 #include <windows.h>
 #include <ctype.h>
 
+#define GAP_X 80
+#define GAP_Y 50
+
 
 int LIGNE = 10;
 int COLONNE = 10;
 int DIFFICULTY = 0;
 char GRAPH = ' ';
+
+
 
 typedef struct Case
 {
@@ -571,8 +576,8 @@ int setWindowColor(SDL_Renderer* renderer, SDL_Color color)
 void graphiqueGrid(SDL_Window* renderer)
 {
     // init grille
-    int col;
-    int lign = 50;
+    int col = GAP_X;
+    int lign = GAP_Y;
     int count = 0;
     for (int i = 0; i < LIGNE; i++)
     {
@@ -598,6 +603,41 @@ void graphiqueGrid(SDL_Window* renderer)
     }
 };
 
+int positionPossible(int x, int y, int heigth , int length)
+{
+
+    if (x >= 0 && x <= (length * LIGNE))
+    {
+        if (y >= 0  && y <= (heigth * COLONNE))
+        {
+            return 1;
+        }
+    }
+}
+
+void graphiqueIndice(int x, int y, int heigth, int length)
+{
+    int indiceColonne;
+    int indiceLigne;
+    if (positionPossible(x, y, heigth, length) == 1)
+    {
+        indiceColonne = (int)(x / 50);
+        indiceLigne = (int)(y / 50);
+        printf("indice %d\n", getIndex1D(indiceLigne, indiceColonne));
+
+    }
+    else
+    {
+        printf("dommage\n");
+    }
+}
+graphiquePosition(int x, int y, int heigth, int length)
+{
+    if (positionPossible(x, y, heigth, length) == 1)
+    {
+
+    }
+}
 int main()
 {
     //SDL
@@ -608,16 +648,17 @@ int main()
     SDL_Texture* texture = NULL;
     int statut = EXIT_FAILURE;
     SDL_Event event;
+    Uint8* clavier;
     SDL_bool quit = SDL_FALSE;
     SDL_Color orange = { 100, 100, 100, 255 };
 
     // button
     int x, y;
     Uint32 boutons;
-    SDL_PumpEvents();
-    boutons = SDL_GetMouseState(&x, &y);
 
 
+    int heigth = 50;
+    int length = 50;
 
     /* Initialisation, création de la fenêtre et du renderer. */
     if (0 != SDL_Init(SDL_INIT_VIDEO))
@@ -658,23 +699,30 @@ int main()
 
     while (!quit)
         {
+        SDL_PumpEvents();
+        boutons = SDL_GetMouseState(&x, &y);
+        clavier = SDL_GetKeyboardState(NULL);
+
         graphiqueGrid(renderer);
 
         SDL_RenderPresent(renderer);
         SDL_WaitEvent(&event);
-        if (event.type == SDL_QUIT)
+
+        if (event.type == SDL_QUIT || clavier[SDL_SCANCODE_ESCAPE] || clavier[SDL_SCANCODE_RETURN])
             quit = SDL_TRUE;
         else if (event.type == SDL_MOUSEBUTTONUP)
+        {
+            if (boutons & SDL_BUTTON(SDL_BUTTON_RIGHT))
             {
-            if (event.button.button == SDL_BUTTON_LEFT)
-             {
-                printf("Clic gauche\n");
-             }
-            else if (event.button.button == SDL_BUTTON_RIGHT)
-             {
-                printf("Clic droit\n");
-             }
+                printf("Clic droit a la positions %d - %d\n", x, y);
             }
+            else if (boutons & SDL_BUTTON(SDL_BUTTON_LEFT))
+            {
+                printf("Clic gauche a la positions %d - %d\n", x, y);
+            }
+
+            graphiqueIndice(x - GAP_X, y - GAP_Y, 50, 50);
+        }
         }
 
     statut = EXIT_SUCCESS;
