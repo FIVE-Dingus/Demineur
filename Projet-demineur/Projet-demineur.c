@@ -15,6 +15,8 @@ int max(int a, int b) { return (a < b) ? b : a; }
 
 #define GAP_X 80
 #define GAP_Y 50
+#define HEIGHT 50
+#define LENGTH 50
 
 
 int LIGNE = 10;
@@ -615,29 +617,36 @@ int positionPossible(int x, int y, int heigth , int length)
     }
 }
 
-void graphiqueIndice(int x, int y, int heigth, int length)
+int graphiqueIndice(int x, int y)
 {
     int indiceColonne;
     int indiceLigne;
-    if (positionPossible(x, y, heigth, length) == 1)
+    if (positionPossible(x, y, HEIGHT, LENGTH) == 1)
     {
         indiceColonne = (int)(x / 50);
         indiceLigne = (int)(y / 50);
         printf("indice %d\n", getIndex1D(indiceLigne, indiceColonne));
-
+        return getIndex1D(indiceLigne, indiceColonne);
     }
     else
     {
         printf("dommage\n");
     }
 }
-graphiquePosition(int x, int y, int heigth, int length)
-{
-    if (positionPossible(x, y, heigth, length) == 1)
-    {
 
-    }
+void changeTexture(SDL_Window* renderer, SDL_Texture* texture, int x, int y)
+{
+    //30 décallage
+
+    int indice = graphiqueIndice(x, y);
+
+
+    SDL_Rect dst = { x + 30, y, 50, 50 };
+    SDL_SetRenderDrawColor(renderer, 150, 0, 150, 255);
+    SDL_RenderCopy(renderer, texture, NULL, &dst);
 }
+
+
 int main()
 {
     //SDL
@@ -689,40 +698,45 @@ int main()
         goto Quit;
     }
 
-    // background
-    setWindowColor(renderer, orange);
-
-    // grille de jeu
-    SDL_SetRenderDrawColor(renderer, 128, 128, 128, 255); //On dessine en vert foncé
-    SDL_Rect rectGrille = { 50, 50, 800, 600 };
-    SDL_RenderFillRect(renderer, &rectGrille);
-
     while (!quit)
         {
+        SDL_RenderClear(renderer);
         SDL_PumpEvents();
+
         boutons = SDL_GetMouseState(&x, &y);
         clavier = SDL_GetKeyboardState(NULL);
 
+        // background
+        setWindowColor(renderer, orange);
+
+        // grille de jeu
+        SDL_SetRenderDrawColor(renderer, 128, 128, 128, 255); //On dessine en vert foncé
+        SDL_Rect rectGrille = { 50, 50, 800, 600 };
+        SDL_RenderFillRect(renderer, &rectGrille);
+
+
         graphiqueGrid(renderer);
 
-        SDL_RenderPresent(renderer);
-        SDL_WaitEvent(&event);
-
-        if (event.type == SDL_QUIT || clavier[SDL_SCANCODE_ESCAPE] || clavier[SDL_SCANCODE_RETURN])
-            quit = SDL_TRUE;
-        else if (event.type == SDL_MOUSEBUTTONUP)
+        while (SDL_PollEvent(&event))
         {
-            if (boutons & SDL_BUTTON(SDL_BUTTON_RIGHT))
+            if (event.type == SDL_QUIT || clavier[SDL_SCANCODE_ESCAPE] || clavier[SDL_SCANCODE_RETURN])
+                quit = SDL_TRUE;
+            else if (event.type == SDL_MOUSEBUTTONUP)
             {
-                printf("Clic droit a la positions %d - %d\n", x, y);
+                if (boutons & SDL_BUTTON(SDL_BUTTON_RIGHT))
+                {
+                    printf("Clic droit a la positions %d - %d\n", x - GAP_X, y - GAP_Y);
+                }
+                else if (boutons & SDL_BUTTON(SDL_BUTTON_LEFT))
+                {
+                    printf("Clic gauche a la positions %d - %d\n", x - GAP_X, y - GAP_Y);
+                }  
+                graphiqueIndice(x - GAP_X, y - GAP_Y);
+                changeTexture(renderer, texture, x - GAP_X, y - GAP_Y);
             }
-            else if (boutons & SDL_BUTTON(SDL_BUTTON_LEFT))
-            {
-                printf("Clic gauche a la positions %d - %d\n", x, y);
-            }
-
-            graphiqueIndice(x - GAP_X, y - GAP_Y, 50, 50);
+            SDL_RenderPresent(renderer);
         }
+        
         }
 
     statut = EXIT_SUCCESS;
