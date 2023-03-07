@@ -594,6 +594,7 @@ void graphiqueGrid(SDL_Window* renderer)
             count++;
         }
         lign = lign + 50;
+        count++;
     }
 };
 
@@ -606,7 +607,16 @@ int main()
     SDL_Window* renderer = NULL;
     SDL_Texture* texture = NULL;
     int statut = EXIT_FAILURE;
+    SDL_Event event;
+    SDL_bool quit = SDL_FALSE;
     SDL_Color orange = { 100, 100, 100, 255 };
+
+    // button
+    int x, y;
+    Uint32 boutons;
+    SDL_PumpEvents();
+    boutons = SDL_GetMouseState(&x, &y);
+
 
 
     /* Initialisation, création de la fenêtre et du renderer. */
@@ -637,23 +647,41 @@ int main()
             SDL_GetError());
         goto Quit;
     }
+
     // background
     setWindowColor(renderer, orange);
+
     // grille de jeu
     SDL_SetRenderDrawColor(renderer, 128, 128, 128, 255); //On dessine en vert foncé
     SDL_Rect rectGrille = { 50, 50, 800, 600 };
     SDL_RenderFillRect(renderer, &rectGrille);
 
+    while (!quit)
+        {
+        graphiqueGrid(renderer);
+
+        SDL_RenderPresent(renderer);
+        SDL_WaitEvent(&event);
+        if (event.type == SDL_QUIT)
+            quit = SDL_TRUE;
+        else if (event.type == SDL_MOUSEBUTTONUP)
+            {
+            if (event.button.button == SDL_BUTTON_LEFT)
+             {
+                printf("Clic gauche\n");
+             }
+            else if (event.button.button == SDL_BUTTON_RIGHT)
+             {
+                printf("Clic droit\n");
+             }
+            }
+        }
 
     statut = EXIT_SUCCESS;
 
     //SDL_Rect dst = { 0, 0, 50, 50 };
     //SDL_RenderCopy(renderer, texture, NULL, &dst);
 
-    graphiqueGrid(renderer);
-
-    SDL_RenderPresent(renderer);
-    SDL_Delay(5000);
 Quit:
     if (NULL != texture)
         SDL_DestroyTexture(texture);
