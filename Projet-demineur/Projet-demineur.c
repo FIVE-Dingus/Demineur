@@ -642,16 +642,10 @@ void changeTexture(SDL_Window* renderer, SDL_Texture* texture, int x, int y)
 
     int indice = graphiqueIndice(x, y);
 
-    for (int i = 0; i < LIGNE; i++)
-    {
-        for (int j = 0; j < COLONNE; j++) 
-        {
-            posY = posY + GAP_Y + (LENGTH * )
-        }
-    }
+    posY = posY + GAP_Y + (indice * LENGTH);
+    posX = posX + GAP_X;
 
-
-    SDL_Rect dst = { x + 30, y, 50, 50 };
+    SDL_Rect dst = { posX + 30, posY, 50, 50 };
     SDL_SetRenderDrawColor(renderer, 150, 0, 150, 255);
     SDL_RenderCopy(renderer, texture, NULL, &dst);
 }
@@ -742,7 +736,7 @@ int main()
                     printf("Clic gauche a la positions %d - %d\n", x - GAP_X, y - GAP_Y);
                 }  
                 graphiqueIndice(x - GAP_X, y - GAP_Y);
-                changeTexture(renderer, texture, x - GAP_X, y - GAP_Y);
+               // changeTexture(renderer, texture, x - GAP_X, y - GAP_Y);
             }
             SDL_RenderPresent(renderer);
         }
