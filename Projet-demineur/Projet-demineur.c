@@ -605,12 +605,12 @@ void graphiqueGrid(SDL_Window* renderer)
     }
 };
 
-int positionPossible(int x, int y, int heigth , int length)
+int positionPossible(int x, int y)
 {
 
-    if (x >= GAP_X && x < (length * LIGNE) + GAP_X )
+    if (x >= GAP_X && x < (WIDTH * LIGNE) + GAP_X )
     {
-        if (y >= GAP_Y && y < (heigth * COLONNE) + GAP_Y)
+        if (y >= GAP_Y && y < (HEIGHT * COLONNE) + GAP_Y)
         {
             return 1;
         }
@@ -624,7 +624,7 @@ int graphiqueIndice(int x, int y, SDL_Rect* caseFile)
 {
 	int indiceColonne;
 	int indiceLigne;
-	if (positionPossible(x, y, HEIGHT, WIDTH) == 1)
+	if (positionPossible(x, y) == 1)
 	{
 		indiceColonne = (int)(x / WIDTH); //indice x par rapport à l'endroit cliqué
 		indiceLigne = (int)(y / HEIGHT); //indice y par rapport à l'endroit cliqué
@@ -693,6 +693,7 @@ SDL_Texture* textureBomb, SDL_Texture* textureFlag)
     {
 		changeTexture(renderer, texture8, x, y, &caseFile);
     }
+    tableauJeu[indice].statut = 1;
 
 }
 
@@ -707,6 +708,20 @@ void changeTexture(SDL_Renderer * renderer, SDL_Texture * texture, int x, int y,
 		SDL_SetRenderDrawColor(renderer, 150, 0, 150, 255);
 		SDL_RenderCopy(renderer, texture, NULL, &dst);
     }
+
+}
+
+void changeTextureChoice(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, SDL_Rect* caseFile, int r, int g, int b, int alpha)
+{
+	int indice = graphiqueIndice(x, y, caseFile);
+	if (indice != -1)
+	{
+		printf("%d, %d\n", caseFile->x, caseFile->y);
+
+		SDL_Rect dst = { caseFile->x, caseFile->y , 50, 50 };
+		SDL_SetRenderDrawColor(renderer, r, g, b, alpha);
+		SDL_RenderCopy(renderer, texture, NULL, &dst);
+	}
 
 }
 
@@ -817,13 +832,12 @@ int main()
                 if (boutons & SDL_BUTTON(SDL_BUTTON_RIGHT))
                 {
                     printf("Clic droit a la positions %d - %d\n", x, y );
-                    changeTexture(renderer, texture1, x, y, &caseFile);
+                    //graphiqueLink(tableauJeu, indice, renderer, caseFile, x, y, texture0, texture1, texture2, texture3, texture4, texture5, texture6, texture7, texture8, textureBomb, textureFlag);
                 }
                 else if (boutons & SDL_BUTTON(SDL_BUTTON_LEFT))
                 {
                     printf("Clic gauche a la positions %d - %d\n", x, y);
-                    changeTexture(renderer, textureFlag, x, y, &caseFile);
-					//graphiqueLink(tableauJeu, indice, renderer, caseFile, x, y, texture0, texture1, texture2, texture3, texture4, texture5, texture6, texture7, texture8, textureBomb, textureFlag)
+                    changeTexture(renderer, texture1, x, y, &caseFile);
                 }
                 graphiqueIndice(x , y , &caseFile);
                // changeTexture(renderer, texture, x - GAP_X, y - GAP_Y);
@@ -946,7 +960,9 @@ void looseRevealGraphique(Case* tableauReveal)
 };
 
 
-void displayGraphique(Case* tableauJeu)
+void displayGraphique(Case* tableauJeu, int indice, SDL_Renderer* renderer, SDL_Rect* caseFile, int x, int y, SDL_Texture* texture0, SDL_Texture* texture1,
+    SDL_Texture* texture2, SDL_Texture* texture3, SDL_Texture* texture4, SDL_Texture* texture5, SDL_Texture* texture6, SDL_Texture* texture7, SDL_Texture* texture8,
+    SDL_Texture* textureBomb, SDL_Texture* textureFlag)
 {
 	//Permet d'afficher les grilles du démineur
 
@@ -958,20 +974,18 @@ void displayGraphique(Case* tableauJeu)
 
 			if (tableauJeu[getIndex1D(i, y)].statut == 1)
 			{
-				if (tableauJeu[getIndex1D(i, y)].symbol != '*' && tableauJeu[getIndex1D(i, y)].symbol != 'F')
-				{
-					tableauJeu[getIndex1D(i, y)].symbol = tableauJeu[getIndex1D(i, y)].number + '0';
-				};
-				printf(" %c ", tableauJeu[getIndex1D(i, y)].symbol);
+                if (tableauJeu[getIndex1D(i, y)].number == 0)
+                {
+					changeTextureChoice(renderer, textureBomb, x, y, &caseFile, 165, 42, 42, 255 );
+                }
+                else {
+					graphiqueLink(tableauJeu, getIndex1D(i, y), renderer, caseFile, x, y, texture0, texture1, texture2, texture3, texture4, texture5, texture6, texture7, texture8, textureBomb, textureFlag);
+                }
 			}
 			else
 			{
-				printf(" ? ");
+				changeTexture(renderer, textureBomb, x, y, &caseFile);
 			};
-			//printf(" %c ", tableauJeu[getIndex1D(i, y)].symbol);
 		};
-		printf("\n");
 	}
-
-	printf("\n");
 };
