@@ -13,7 +13,7 @@ int max(int a, int b) { return (a < b) ? b : a; }
 #include <windows.h>
 #include <ctype.h>
 
-#define GAP_X 80
+#define GAP_X 50
 #define GAP_Y 50
 #define HEIGHT 50
 #define WIDTH 50
@@ -583,7 +583,7 @@ void graphiqueGrid(SDL_Window* renderer)
     int count = 0;
     for (int i = 0; i < LIGNE; i++)
     {
-        col = 80;
+        col = 50;
         for (int j = 0; j < COLONNE; j++)
         {
             if (count % 2 == 0)
@@ -608,104 +608,106 @@ void graphiqueGrid(SDL_Window* renderer)
 int positionPossible(int x, int y, int heigth , int length)
 {
 
-    if (x >= 0 && x <= (length * LIGNE))
+    if (x >= GAP_X && x < (length * LIGNE) + GAP_X )
     {
-        if (y >= 0  && y <= (heigth * COLONNE))
+        if (y >= GAP_Y && y < (heigth * COLONNE) + GAP_Y)
         {
             return 1;
         }
     }
+    else {
+        return -1;
+    };
 }
+
 int graphiqueIndice(int x, int y, SDL_Rect* caseFile)
 {
-    int indiceColonne;
-    int indiceLigne;
-    if (positionPossible(x, y, HEIGHT, WIDTH) == 1)
-    {
-        indiceColonne = (int)(x / WIDTH); //indice x par rapport à l'endroit cliqué
-        indiceLigne = (int)(y / HEIGHT); //indice y par rapport à l'endroit cliqué
+	int indiceColonne;
+	int indiceLigne;
+	if (positionPossible(x, y, HEIGHT, WIDTH) == 1)
+	{
+		indiceColonne = (int)(x / WIDTH); //indice x par rapport à l'endroit cliqué
+		indiceLigne = (int)(y / HEIGHT); //indice y par rapport à l'endroit cliqué
 
-        caseFile->x = (indiceColonne * WIDTH); //coordonnées x en haut à gauche 
-        caseFile->y = (indiceLigne * HEIGHT); //coordonnées y en haut à gauche 
+		caseFile->x = (indiceColonne * WIDTH); //coordonnées x en haut à gauche 
+		caseFile->y = (indiceLigne * HEIGHT); //coordonnées y en haut à gauche 
 
-        printf("indice %d\n", getIndex1D(indiceLigne, indiceColonne));
-        return getIndex1D(indiceLigne, indiceColonne);
-    }
-    else
-    {
-        printf("dommage\n");
-    }
+		printf("indice %d\n", getIndex1D(indiceLigne, indiceColonne));
+		return getIndex1D(indiceLigne, indiceColonne);
+	}
+	else
+	{
+		printf("dommage\n");
+	}
 
-    return -1;
+	return -1;
 }
-void graphiqueLink(Case* tableauJeu, int indice)
+
+void graphiqueLink(Case* tableauJeu, int indice, SDL_Renderer* renderer, SDL_Rect* caseFile, int x, int y, SDL_Texture* texture0, SDL_Texture* texture1, 
+SDL_Texture* texture2, SDL_Texture* texture3, SDL_Texture* texture4, SDL_Texture* texture5, SDL_Texture* texture6, SDL_Texture* texture7, SDL_Texture* texture8, 
+SDL_Texture* textureBomb, SDL_Texture* textureFlag)
 {
     // affiche l'image en fonction des nombres et symboles du tableau de jeu par rapport à un indice donné
 
     if (tableauJeu[indice].number == -1)
     {
-
+		changeTexture(renderer, textureBomb, x, y, &caseFile);
     }
     else if (tableauJeu[indice].symbol == "f" || tableauJeu[indice].symbol == "F")
     {
-
+		changeTexture(renderer, textureFlag, x, y, &caseFile);
     }
     else if (tableauJeu[indice].number == 0)
-    {
-
+    {        
+		changeTexture(renderer, texture0, x, y, &caseFile);
     }
     else if (tableauJeu[indice].number == 1)
-    {
-
+    {		
+		changeTexture(renderer, texture1, x, y, &caseFile);
     }
     else if (tableauJeu[indice].number == 2)
-    {
-
+    {		
+		changeTexture(renderer, texture2, x, y, &caseFile);
     }
     else if (tableauJeu[indice].number == 3)
-    {
-
+    {		
+		changeTexture(renderer, texture3, x, y, &caseFile);
     }
     else if (tableauJeu[indice].number == 4)
-    {
-
+    {		
+		changeTexture(renderer, texture4, x, y, &caseFile);
     }
     else if (tableauJeu[indice].number == 5)
-    {
-
+    {		
+		changeTexture(renderer, texture5, x, y, &caseFile);
     }
     else if (tableauJeu[indice].number == 6)
-    {
-
+    {		
+		changeTexture(renderer, texture6, x, y, &caseFile);
     }
     else if (tableauJeu[indice].number == 7)
-    {
-
+    {		
+		changeTexture(renderer, texture7, x, y, &caseFile);
     }
     else if (tableauJeu[indice].number == 8)
     {
-
+		changeTexture(renderer, texture8, x, y, &caseFile);
     }
-    else if (tableauJeu[indice].number == 9)
-    {
 
-    }
 }
 
-void changeTexture(SDL_Window* renderer, SDL_Texture* texture, int x, int y)
+void changeTexture(SDL_Renderer * renderer, SDL_Texture * texture, int x, int y, SDL_Rect* caseFile)
 {
-    //30 décallage
-    int posY = 0;
-    int posX = 0;
+    int indice = graphiqueIndice(x, y, caseFile);
+    if (indice != -1)
+    {
+        printf("%d, %d\n", caseFile->x, caseFile->y);
 
-    int indice = graphiqueIndice(x, y);
+		SDL_Rect dst = { caseFile->x, caseFile->y , 50, 50 };
+		SDL_SetRenderDrawColor(renderer, 150, 0, 150, 255);
+		SDL_RenderCopy(renderer, texture, NULL, &dst);
+    }
 
-    posY = posY + GAP_Y + (indice * WIDTH);
-    posX = posX + GAP_X;
-
-    SDL_Rect dst = { posX + 30, posY, 50, 50 };
-    SDL_SetRenderDrawColor(renderer, 150, 0, 150, 255);
-    SDL_RenderCopy(renderer, texture, NULL, &dst);
 }
 
 
@@ -722,7 +724,21 @@ int main()
     Uint8* clavier;
     SDL_bool quit = SDL_FALSE;
     SDL_Color orange = { 100, 100, 100, 255 };
-    SDL_Surface* image1 = SDL_LoadBMP("image/pixil-frame-0.bmp");
+	SDL_Rect caseFile;
+
+	// init imgage nombre 
+
+    SDL_Surface* image0 = SDL_LoadBMP("image/image0.bmp");
+    SDL_Surface* image1 = SDL_LoadBMP("image/image1.bmp");
+	SDL_Surface* image2 = SDL_LoadBMP("image/image2.bmp");
+	SDL_Surface* image3 = SDL_LoadBMP("image/image3.bmp");
+    SDL_Surface* image4 = SDL_LoadBMP("image/image4.bmp");
+    SDL_Surface* image5 = SDL_LoadBMP("image/image5.bmp");
+	SDL_Surface* image6 = SDL_LoadBMP("image/image6.bmp");
+	SDL_Surface* image7 = SDL_LoadBMP("image/image7.bmp");
+	SDL_Surface* image8 = SDL_LoadBMP("image/image8.bmp");
+	SDL_Surface* imageFlag = SDL_LoadBMP("image/flag.bmp");
+	SDL_Surface* imageBomb = SDL_LoadBMP("image/bomb.bmp");
 
     // button
     int x, y;
@@ -760,8 +776,22 @@ int main()
             SDL_GetError());
         goto Quit;
     }
+
+
+    // init imgage nombre 
+
+    SDL_Texture* texture0 = SDL_CreateTextureFromSurface(renderer, image0);
     SDL_Texture* texture1 = SDL_CreateTextureFromSurface(renderer, image1);
-    if (NULL == texture1) {
+    SDL_Texture* texture2 = SDL_CreateTextureFromSurface(renderer, image2);
+    SDL_Texture* texture3 = SDL_CreateTextureFromSurface(renderer, image3);
+    SDL_Texture* texture4 = SDL_CreateTextureFromSurface(renderer, image4);
+    SDL_Texture* texture5 = SDL_CreateTextureFromSurface(renderer, image5);
+    SDL_Texture* texture6 = SDL_CreateTextureFromSurface(renderer, image6);
+    SDL_Texture* texture7 = SDL_CreateTextureFromSurface(renderer, image7);
+    SDL_Texture* texture8 = SDL_CreateTextureFromSurface(renderer, image8);
+    SDL_Texture* textureFlag = SDL_CreateTextureFromSurface(renderer, imageFlag);
+    SDL_Texture* textureBomb = SDL_CreateTextureFromSurface(renderer, imageBomb);
+    if (NULL == texture0 || NULL == texture1 || NULL == texture2 || NULL == texture3 || NULL == texture4 || NULL == texture5 || NULL == texture6 || NULL == texture7 || NULL == texture8  || NULL == textureFlag || NULL == textureBomb) {
         fprintf(stderr, "Erreur SDL_CreateTexture : %s", SDL_GetError());
         goto Quit;
     }
@@ -776,12 +806,6 @@ int main()
         // background
         setWindowColor(renderer, orange);
 
-        // grille de jeu
-        SDL_SetRenderDrawColor(renderer, 128, 128, 128, 255); //On dessine en vert foncé
-        SDL_Rect rectGrille = { 50, 50, 800, 600 };
-        SDL_RenderFillRect(renderer, &rectGrille);
-
-
         graphiqueGrid(renderer);
 
         while (SDL_PollEvent(&event))
@@ -792,15 +816,16 @@ int main()
             {
                 if (boutons & SDL_BUTTON(SDL_BUTTON_RIGHT))
                 {
-                    printf("Clic droit a la positions %d - %d\n", x - GAP_X, y - GAP_Y);
-                    SDL_RenderCopy(renderer, texture1, NULL, NULL);
-                    SDL_RenderPresent(renderer);
+                    printf("Clic droit a la positions %d - %d\n", x, y );
+                    changeTexture(renderer, texture1, x, y, &caseFile);
                 }
                 else if (boutons & SDL_BUTTON(SDL_BUTTON_LEFT))
                 {
-                    printf("Clic gauche a la positions %d - %d\n", x - GAP_X, y - GAP_Y);
-                }  
-                graphiqueIndice(x - GAP_X, y - GAP_Y);
+                    printf("Clic gauche a la positions %d - %d\n", x, y);
+                    changeTexture(renderer, textureFlag, x, y, &caseFile);
+					//graphiqueLink(tableauJeu, indice, renderer, caseFile, x, y, texture0, texture1, texture2, texture3, texture4, texture5, texture6, texture7, texture8, textureBomb, textureFlag)
+                }
+                graphiqueIndice(x , y , &caseFile);
                // changeTexture(renderer, texture, x - GAP_X, y - GAP_Y);
             }
             SDL_RenderPresent(renderer);
@@ -872,3 +897,81 @@ int main2()
 
 // interface graphique
 
+void looseRevealGraphique(Case* tableauReveal)
+{
+	//Permet d'afficher le tableau généré avec tout de révélé
+
+	// Chiffres en haut
+	printf("      ");
+	for (int i = 0; i < COLONNE; i++)
+	{
+		if (i >= 10)
+		{
+			printf("%d ", i + 1);
+		}
+		else
+		{
+			printf("%d  ", i + 1);
+		};
+
+	};
+	printf("\n\n");
+
+	// Chiffres sur le coté et affichage du tableau
+	for (int i = 0; i < LIGNE; i++)
+	{
+		if (i >= 9)
+		{
+			printf(" %d  ", i + 1);
+		}
+		else
+		{
+			printf(" %d   ", i + 1);
+		};
+
+		for (int y = 0; y < COLONNE; y++)
+		{
+			if (tableauReveal[getIndex1D(i, y)].statut == 0 && tableauReveal[getIndex1D(i, y)].symbol == '?')
+			{
+				tableauReveal[getIndex1D(i, y)].statut = 1;
+				tableauReveal[getIndex1D(i, y)].symbol = '0';
+			};
+			textColor(tableauReveal, getIndex1D(i, y));
+			printf(" %c ", tableauReveal[getIndex1D(i, y)].symbol);
+			Color(15, 0);
+		};
+		printf("\n");
+	}
+	printf("\n");
+};
+
+
+void displayGraphique(Case* tableauJeu)
+{
+	//Permet d'afficher les grilles du démineur
+
+	// print ligne
+	for (int i = 0; i < LIGNE; i++)
+	{
+		for (int y = 0; y < COLONNE; y++)
+		{
+
+			if (tableauJeu[getIndex1D(i, y)].statut == 1)
+			{
+				if (tableauJeu[getIndex1D(i, y)].symbol != '*' && tableauJeu[getIndex1D(i, y)].symbol != 'F')
+				{
+					tableauJeu[getIndex1D(i, y)].symbol = tableauJeu[getIndex1D(i, y)].number + '0';
+				};
+				printf(" %c ", tableauJeu[getIndex1D(i, y)].symbol);
+			}
+			else
+			{
+				printf(" ? ");
+			};
+			//printf(" %c ", tableauJeu[getIndex1D(i, y)].symbol);
+		};
+		printf("\n");
+	}
+
+	printf("\n");
+};
