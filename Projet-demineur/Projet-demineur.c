@@ -657,14 +657,14 @@ int main()
 
     //init SDL page et renderer
     SDL_Window* window = NULL;
-    SDL_Window* renderer = NULL;
+    SDL_Renderer* renderer = NULL;
     SDL_Texture* texture = NULL;
     int statut = EXIT_FAILURE;
     SDL_Event event;
     Uint8* clavier;
     SDL_bool quit = SDL_FALSE;
     SDL_Color orange = { 100, 100, 100, 255 };
-    SDL_Surface* image1 = SDL_LoadBMP("image / pixil - frame - 0.bmp");
+    SDL_Surface* image1 = SDL_LoadBMP("image/pixil-frame-0.bmp");
 
     // button
     int x, y;
@@ -695,12 +695,6 @@ int main()
             SDL_GetError());
         goto Quit;
     }
-    
-    SDL_Texture * texture1 = SDL_CreateTextureFromSurface(renderer, image1);
-    if (NULL == texture1) {
-        fprintf(stderr, "Erreur SDL_CreateTexture : %s", SDL_GetError());
-        goto Quit;
-    }
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 200, 200);
     if (NULL == texture)
     {
@@ -708,7 +702,11 @@ int main()
             SDL_GetError());
         goto Quit;
     }
-
+    SDL_Texture* texture1 = SDL_CreateTextureFromSurface(renderer, image1);
+    if (NULL == texture1) {
+        fprintf(stderr, "Erreur SDL_CreateTexture : %s", SDL_GetError());
+        goto Quit;
+    }
     while (!quit)
         {
         SDL_RenderClear(renderer);
@@ -737,6 +735,8 @@ int main()
                 if (boutons & SDL_BUTTON(SDL_BUTTON_RIGHT))
                 {
                     printf("Clic droit a la positions %d - %d\n", x - GAP_X, y - GAP_Y);
+                    SDL_RenderCopy(renderer, texture1, NULL, NULL);
+                    SDL_RenderPresent(renderer);
                 }
                 else if (boutons & SDL_BUTTON(SDL_BUTTON_LEFT))
                 {
