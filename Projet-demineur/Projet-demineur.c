@@ -664,6 +664,7 @@ int main()
     Uint8* clavier;
     SDL_bool quit = SDL_FALSE;
     SDL_Color orange = { 100, 100, 100, 255 };
+    SDL_Surface* image1 = SDL_LoadBMP("image / pixil - frame - 0.bmp");
 
     // button
     int x, y;
@@ -692,6 +693,12 @@ int main()
     {
         fprintf(stderr, "Erreur SDL_CreateRenderer : %s",
             SDL_GetError());
+        goto Quit;
+    }
+    
+    SDL_Texture * texture1 = SDL_CreateTextureFromSurface(renderer, image1);
+    if (NULL == texture1) {
+        fprintf(stderr, "Erreur SDL_CreateTexture : %s", SDL_GetError());
         goto Quit;
     }
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 200, 200);
