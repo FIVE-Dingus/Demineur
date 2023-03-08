@@ -911,52 +911,23 @@ int main2()
 
 // interface graphique
 
-void looseRevealGraphique(Case* tableauReveal)
+void looseRevealGraphique(Case* tableauReveal, int indice, SDL_Renderer* renderer, SDL_Rect* caseFile, int x, int y, SDL_Texture* texture0, SDL_Texture* texture1,
+	SDL_Texture* texture2, SDL_Texture* texture3, SDL_Texture* texture4, SDL_Texture* texture5, SDL_Texture* texture6, SDL_Texture* texture7, SDL_Texture* texture8,
+	SDL_Texture* textureBomb, SDL_Texture* textureFlag)
 {
 	//Permet d'afficher le tableau généré avec tout de révélé
 
-	// Chiffres en haut
-	printf("      ");
-	for (int i = 0; i < COLONNE; i++)
-	{
-		if (i >= 10)
-		{
-			printf("%d ", i + 1);
-		}
-		else
-		{
-			printf("%d  ", i + 1);
-		};
-
-	};
-	printf("\n\n");
-
-	// Chiffres sur le coté et affichage du tableau
 	for (int i = 0; i < LIGNE; i++)
 	{
-		if (i >= 9)
-		{
-			printf(" %d  ", i + 1);
-		}
-		else
-		{
-			printf(" %d   ", i + 1);
-		};
-
 		for (int y = 0; y < COLONNE; y++)
 		{
 			if (tableauReveal[getIndex1D(i, y)].statut == 0 && tableauReveal[getIndex1D(i, y)].symbol == '?')
 			{
 				tableauReveal[getIndex1D(i, y)].statut = 1;
-				tableauReveal[getIndex1D(i, y)].symbol = '0';
 			};
-			textColor(tableauReveal, getIndex1D(i, y));
-			printf(" %c ", tableauReveal[getIndex1D(i, y)].symbol);
-			Color(15, 0);
+			graphiqueLink(tableauReveal, getIndex1D(i, y), renderer, caseFile, x, y, texture0, texture1, texture2, texture3, texture4, texture5, texture6, texture7, texture8, textureBomb, textureFlag);
 		};
-		printf("\n");
 	}
-	printf("\n");
 };
 
 
