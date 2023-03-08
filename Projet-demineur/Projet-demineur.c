@@ -16,7 +16,7 @@ int max(int a, int b) { return (a < b) ? b : a; }
 #define GAP_X 80
 #define GAP_Y 50
 #define HEIGHT 50
-#define LENGTH 50
+#define WIDTH 50
 
 
 int LIGNE = 10;
@@ -616,21 +616,79 @@ int positionPossible(int x, int y, int heigth , int length)
         }
     }
 }
-
-int graphiqueIndice(int x, int y)
+int graphiqueIndice(int x, int y, SDL_Rect* caseFile)
 {
     int indiceColonne;
     int indiceLigne;
-    if (positionPossible(x, y, HEIGHT, LENGTH) == 1)
+    if (positionPossible(x, y, HEIGHT, WIDTH) == 1)
     {
-        indiceColonne = (int)(x / 50);
-        indiceLigne = (int)(y / 50);
+        indiceColonne = (int)(x / WIDTH); //indice x par rapport à l'endroit cliqué
+        indiceLigne = (int)(y / HEIGHT); //indice y par rapport à l'endroit cliqué
+
+        caseFile->x = (indiceColonne * WIDTH); //coordonnées x en haut à gauche 
+        caseFile->y = (indiceLigne * HEIGHT); //coordonnées y en haut à gauche 
+
         printf("indice %d\n", getIndex1D(indiceLigne, indiceColonne));
         return getIndex1D(indiceLigne, indiceColonne);
     }
     else
     {
         printf("dommage\n");
+    }
+
+    return -1;
+}
+void graphiqueLink(Case* tableauJeu, int indice)
+{
+    // affiche l'image en fonction des nombres et symboles du tableau de jeu par rapport à un indice donné
+
+    if (tableauJeu[indice].number == -1)
+    {
+
+    }
+    else if (tableauJeu[indice].symbol == "f" || tableauJeu[indice].symbol == "F")
+    {
+
+    }
+    else if (tableauJeu[indice].number == 0)
+    {
+
+    }
+    else if (tableauJeu[indice].number == 1)
+    {
+
+    }
+    else if (tableauJeu[indice].number == 2)
+    {
+
+    }
+    else if (tableauJeu[indice].number == 3)
+    {
+
+    }
+    else if (tableauJeu[indice].number == 4)
+    {
+
+    }
+    else if (tableauJeu[indice].number == 5)
+    {
+
+    }
+    else if (tableauJeu[indice].number == 6)
+    {
+
+    }
+    else if (tableauJeu[indice].number == 7)
+    {
+
+    }
+    else if (tableauJeu[indice].number == 8)
+    {
+
+    }
+    else if (tableauJeu[indice].number == 9)
+    {
+
     }
 }
 
@@ -642,7 +700,7 @@ void changeTexture(SDL_Window* renderer, SDL_Texture* texture, int x, int y)
 
     int indice = graphiqueIndice(x, y);
 
-    posY = posY + GAP_Y + (indice * LENGTH);
+    posY = posY + GAP_Y + (indice * WIDTH);
     posX = posX + GAP_X;
 
     SDL_Rect dst = { posX + 30, posY, 50, 50 };
