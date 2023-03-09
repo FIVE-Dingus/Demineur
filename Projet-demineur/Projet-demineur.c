@@ -13,10 +13,11 @@ int max(int a, int b) { return (a < b) ? b : a; }
 #include <windows.h>
 #include <ctype.h>
 
-#define GAP_X 50
-#define GAP_Y 50
+int GAP_X = 50;
+int GAP_Y = 50;
 #define HEIGHT 50
 #define WIDTH 50
+
 
 
 int LIGNE = 10;
@@ -575,7 +576,14 @@ int setWindowColor(SDL_Renderer* renderer, SDL_Color color)
    }
 
 
-void graphiqueGrid(SDL_Window* renderer)
+void drawRect(SDL_Renderer* renderer, SDL_Rect* dst, int r, int g, int b, int alpha)
+{
+	SDL_SetRenderDrawColor(renderer, r, g, b, alpha);
+	SDL_RenderFillRect(renderer, dst);
+	SDL_RenderDrawRect(renderer, dst);
+}
+
+void graphiqueInitGrid(SDL_Window* renderer)
 {
     // init grille
     int col = GAP_X;
@@ -586,17 +594,16 @@ void graphiqueGrid(SDL_Window* renderer)
         col = 50;
         for (int j = 0; j < COLONNE; j++)
         {
+			SDL_Rect rect = { col, lign, 50, 50 };
+
             if (count % 2 == 0)
             {
-                SDL_SetRenderDrawColor(renderer, 0, 100, 0, 255); //On dessine en vert foncé
+                drawRect(renderer, &rect, 0, 100, 0, 255); //On dessine en vert foncé
             }
             else
             {
-                SDL_SetRenderDrawColor(renderer, 0, 150, 0, 255); //On dessine en vert clair
+				drawRect(renderer, &rect, 0, 150, 0, 255); //On dessine en vert clair
             }
-            SDL_Rect rect = { col, lign, 50, 50 };
-            SDL_RenderFillRect(renderer, &rect);
-
             col = col + 50;
             count++;
         }
@@ -620,7 +627,7 @@ int positionPossible(int x, int y)
     };
 }
 
-int graphiqueIndice(int x, int y, SDL_Rect* caseFile)
+int getGraphiqueIIndice(int x, int y)
 {
 	int indiceColonne;
 	int indiceLigne;
@@ -628,9 +635,6 @@ int graphiqueIndice(int x, int y, SDL_Rect* caseFile)
 	{
 		indiceColonne = (int)(x / WIDTH); //indice x par rapport à l'endroit cliqué
 		indiceLigne = (int)(y / HEIGHT); //indice y par rapport à l'endroit cliqué
-
-		caseFile->x = (indiceColonne * WIDTH); //coordonnées x en haut à gauche 
-		caseFile->y = (indiceLigne * HEIGHT); //coordonnées y en haut à gauche 
 
 		printf("indice %d\n", getIndex1D(indiceLigne, indiceColonne));
 		return getIndex1D(indiceLigne, indiceColonne);
@@ -643,103 +647,197 @@ int graphiqueIndice(int x, int y, SDL_Rect* caseFile)
 	return -1;
 }
 
-void graphiqueLink(Case* tableauJeu, int indice, SDL_Renderer* renderer, SDL_Rect* caseFile, int x, int y, SDL_Texture* texture0, SDL_Texture* texture1, 
-SDL_Texture* texture2, SDL_Texture* texture3, SDL_Texture* texture4, SDL_Texture* texture5, SDL_Texture* texture6, SDL_Texture* texture7, SDL_Texture* texture8, 
-SDL_Texture* textureBomb, SDL_Texture* textureFlag)
+void getGraphiquePos (int i, int j , SDL_Rect* pos)
+{
+		pos->x = (i * WIDTH); //coordonnées x en haut à gauche 
+		pos->y = (j * HEIGHT); //coordonnées y en haut à gauche 
+}
+
+void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, SDL_Rect* pos)
+{
+	SDL_Rect dst = { pos->x, pos->y , 50, 50 };
+	SDL_RenderCopy(renderer, texture, NULL, &dst);
+
+}
+
+void drawColorRect(SDL_Renderer* renderer, SDL_Texture* texture, SDL_Rect* pos, int r, int g, int b, int alpha)
+{
+	SDL_Rect dst = { pos->x, pos->y , 50, 50 };
+	drawRect(renderer, &dst, r, g, b, alpha);
+}
+
+void textureChoice(Case* tableauJeu, int indice, SDL_Renderer* renderer, SDL_Rect* pos, SDL_Texture* textures[10])
 {
     // affiche l'image en fonction des nombres et symboles du tableau de jeu par rapport à un indice donné
+    int index = tableauJeu[indice].number;
+	char symbol = tableauJeu[indice].symbol;
+    if (symbol == 'F' )
+    {
+        index = 9; // drapeau texture 
+    }
+    if (index == -1)
+    {
+        index = 10; // bombe texture 
+    }
 
-    if (tableauJeu[indice].number == -1)
-    {
-		changeTexture(renderer, textureBomb, x, y, &caseFile);
-    }
-    else if (tableauJeu[indice].symbol == "f" || tableauJeu[indice].symbol == "F")
-    {
-		changeTexture(renderer, textureFlag, x, y, &caseFile);
-    }
-    else if (tableauJeu[indice].number == 0)
-    {        
-		changeTexture(renderer, texture0, x, y, &caseFile);
-    }
-    else if (tableauJeu[indice].number == 1)
-    {		
-		changeTexture(renderer, texture1, x, y, &caseFile);
-    }
-    else if (tableauJeu[indice].number == 2)
-    {		
-		changeTexture(renderer, texture2, x, y, &caseFile);
-    }
-    else if (tableauJeu[indice].number == 3)
-    {		
-		changeTexture(renderer, texture3, x, y, &caseFile);
-    }
-    else if (tableauJeu[indice].number == 4)
-    {		
-		changeTexture(renderer, texture4, x, y, &caseFile);
-    }
-    else if (tableauJeu[indice].number == 5)
-    {		
-		changeTexture(renderer, texture5, x, y, &caseFile);
-    }
-    else if (tableauJeu[indice].number == 6)
-    {		
-		changeTexture(renderer, texture6, x, y, &caseFile);
-    }
-    else if (tableauJeu[indice].number == 7)
-    {		
-		changeTexture(renderer, texture7, x, y, &caseFile);
-    }
-    else if (tableauJeu[indice].number == 8)
-    {
-		changeTexture(renderer, texture8, x, y, &caseFile);
-    }
-    tableauJeu[indice].statut = 1;
+    drawTexture(renderer, textures[index], pos);
 
 }
 
-void changeTexture(SDL_Renderer * renderer, SDL_Texture * texture, int x, int y, SDL_Rect* caseFile)
+void looseRevealGraphique(Case* tableauReveal, SDL_Renderer* renderer, SDL_Texture* textures[10])
 {
-    int indice = graphiqueIndice(x, y, caseFile);
-    if (indice != -1)
-    {
-        printf("%d, %d\n", caseFile->x, caseFile->y);
+	//Permet d'afficher le tableau généré avec tout de révélé
 
-		SDL_Rect dst = { caseFile->x, caseFile->y , 50, 50 };
-		SDL_SetRenderDrawColor(renderer, 150, 0, 150, 255);
-		SDL_RenderCopy(renderer, texture, NULL, &dst);
-    }
+	SDL_Rect pos = { 0, 0, 50, 50 };
 
-}
-
-void changeTextureChoice(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, SDL_Rect* caseFile, int r, int g, int b, int alpha)
-{
-	int indice = graphiqueIndice(x, y, caseFile);
-	if (indice != -1)
+	for (int i = 0; i < LIGNE; i++)
 	{
-		printf("%d, %d\n", caseFile->x, caseFile->y);
+		for (int j = 0; j < COLONNE; j++)
+		{
+			getGraphiquePos(i, j, &pos);
 
-		SDL_Rect dst = { caseFile->x, caseFile->y , 50, 50 };
-		SDL_SetRenderDrawColor(renderer, r, g, b, alpha);
-		SDL_RenderCopy(renderer, texture, NULL, &dst);
+            int indice = getIndex1D(i, j);
+
+			if (tableauReveal[indice].statut == 0 && tableauReveal[indice].symbol == '?')
+			{
+				tableauReveal[indice].statut = 1;
+			};
+			textureChoice(tableauReveal, indice, renderer, &pos, textures);
+		};
 	}
+};
 
+
+void displayGraphique(Case* tableauJeu, SDL_Renderer* renderer, SDL_Texture* textures[10])
+{
+	//Permet d'afficher les grilles du démineur
+
+    SDL_Rect pos = {0, 0, 50, 50};
+
+	// print ligne
+	for (int i = 0; i < LIGNE; i++)
+	{
+		for (int j = 0; j < COLONNE; j++)
+		{
+			getGraphiquePos(i, j, &pos);
+
+            int indice = getIndex1D(i, j);
+
+			if (tableauJeu[indice].statut == 1)
+			{
+				if (tableauJeu[indice].number == 0)
+				{
+					textureChoice(tableauJeu, indice, renderer, &pos, textures);
+					drawColorRect(renderer, textures, &pos, 165, 42, 42, 255); // rectangle couleur marron
+				}
+				else {
+					textureChoice(tableauJeu, indice, renderer, &pos, textures);
+				}
+			}
+			else
+			{
+				drawTexture(renderer, textures[10], &pos);
+			};
+		};
+	}
+};
+
+void gameGraphique(Case* tableauJeu, Case* tableauReveal, int nbBombe, int indice, SDL_Renderer* renderer, SDL_Texture* textures[10], SDL_Rect * pos)
+{
+	//Permet de lancer le jeu du démineur 
+
+	int compteCasePlayed = 0;
+	int gagnant = 0;
+	int ligne = 0;
+	int colonne = 0;
+        SDL_Event event;
+    SDL_Rect rect_case;
+	while (gagnant == 0) {
+
+		while (SDL_PollEvent(&event))
+		{
+			if (event.type == SDL_MOUSEBUTTONDOWN)
+			{
+                int x, y;
+				Uint32 boutons = SDL_GetMouseState(&x, &y);
+                int indice = getGraphiqueIIndice(x, y, &rect_case);
+
+				if (indice != -1 && boutons & SDL_BUTTON(SDL_BUTTON_RIGHT))
+				{
+					if (tableauJeu[indice].statut != 1)
+					{
+
+						if (tableauJeu[indice].symbol != 'F')
+						{
+							tableauJeu[indice].symbol = 'F';
+						}
+						else
+						{
+							tableauJeu[indice].symbol = ' ';
+						}
+					}
+				}
+				else if (indice != -1 && boutons & SDL_BUTTON(SDL_BUTTON_LEFT))
+				{
+					if (compteCasePlayed == 0)
+					{
+						int tableauBombTaille = LIGNE * COLONNE;
+						int* tableauDispBombe = malloc(sizeof(int) * tableauBombTaille);
+
+						for (int i = 0; i < tableauBombTaille; i++)
+						{
+							tableauDispBombe[i] = i;
+						};
+
+						//placeBombeDebug(0, 0, tableauJeu);
+						firstReveal(tableauJeu, ligne, colonne, tableauDispBombe, &tableauBombTaille);
+						placeBombe(nbBombe, tableauJeu, tableauDispBombe, tableauBombTaille);
+						memcpy(tableauReveal, tableauJeu, sizeof(Case) * (LIGNE * COLONNE));
+						revealNearby(ligne, colonne, tableauJeu, &compteCasePlayed, 0);
+						free(tableauDispBombe);
+					}
+					else
+					{
+						if (tableauJeu[getIndex1D(x, y)].statut == 0)
+						{
+							tableauJeu[getIndex1D(x, y)].statut = 1;
+							if (tableauJeu[getIndex1D(x, y)].number == -1)
+							{
+								looseRevealGraphique(tableauReveal, renderer, textures);
+								printf("Vous avez perdu bande de noobz\n\n");
+								gagnant = 1;
+							}
+							if (compteCasePlayed == (LIGNE * COLONNE) - nbBombe)
+							{
+								printf("Vous avez gagne bande de Gigachad\n\n");
+								gagnant = 2;
+							}
+						}
+					}
+				}
+			}
+
+			displayGraphique(tableauJeu, renderer, textures);
+			SDL_RenderPresent(renderer);
+		}
+	}
 }
 
 
-int main()
+int SDL(Case * tableauJeu , Case * tableauReveal, int nbBombe)
 {
     //SDL
 
     //init SDL page et renderer
     SDL_Window* window = NULL;
-    SDL_Renderer* renderer = NULL;
     SDL_Texture* texture = NULL;
     int statut = EXIT_FAILURE;
-    SDL_Event event;
     Uint8* clavier;
     SDL_bool quit = SDL_FALSE;
-    SDL_Color orange = { 100, 100, 100, 255 };
-	SDL_Rect caseFile;
+    SDL_Color gray = { 100, 100, 100, 255 };
+	SDL_Rect pos;
+    SDL_Renderer* renderer = NULL;
+    int indice = 0;
 
 	// init imgage nombre 
 
@@ -759,6 +857,8 @@ int main()
     int x, y;
     Uint32 boutons;
 
+    int sizeX = (COLONNE * 50) + (2 * GAP_X);
+    int sizeY = (LIGNE * 50) + (2 * GAP_Y);
 
     int heigth = 50;
     int length = 50;
@@ -768,104 +868,50 @@ int main()
     {
         fprintf(stderr, "Erreur SDL_Init : %s",
             SDL_GetError());
-        goto Quit;
+        destroy();
     }
-    window = SDL_CreateWindow("SDL2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 900, 700, SDL_WINDOW_RESIZABLE);
+    window = SDL_CreateWindow("SDL2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, sizeX, sizeY, SDL_WINDOW_RESIZABLE);
     if (NULL == window)
     {
         fprintf(stderr, "Erreur SDL_CreateWindow : %s",
             SDL_GetError());
-        goto Quit;
     }
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (NULL == renderer)
     {
         fprintf(stderr, "Erreur SDL_CreateRenderer : %s",
             SDL_GetError());
-        goto Quit;
     }
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 200, 200);
     if (NULL == texture)
     {
         fprintf(stderr, "Erreur SDL_CreateTexture : %s",
             SDL_GetError());
-        goto Quit;
     }
 
 
     // init imgage nombre 
-
-    SDL_Texture* texture0 = SDL_CreateTextureFromSurface(renderer, image0);
-    SDL_Texture* texture1 = SDL_CreateTextureFromSurface(renderer, image1);
-    SDL_Texture* texture2 = SDL_CreateTextureFromSurface(renderer, image2);
-    SDL_Texture* texture3 = SDL_CreateTextureFromSurface(renderer, image3);
-    SDL_Texture* texture4 = SDL_CreateTextureFromSurface(renderer, image4);
-    SDL_Texture* texture5 = SDL_CreateTextureFromSurface(renderer, image5);
-    SDL_Texture* texture6 = SDL_CreateTextureFromSurface(renderer, image6);
-    SDL_Texture* texture7 = SDL_CreateTextureFromSurface(renderer, image7);
-    SDL_Texture* texture8 = SDL_CreateTextureFromSurface(renderer, image8);
-    SDL_Texture* textureFlag = SDL_CreateTextureFromSurface(renderer, imageFlag);
-    SDL_Texture* textureBomb = SDL_CreateTextureFromSurface(renderer, imageBomb);
-    if (NULL == texture0 || NULL == texture1 || NULL == texture2 || NULL == texture3 || NULL == texture4 || NULL == texture5 || NULL == texture6 || NULL == texture7 || NULL == texture8  || NULL == textureFlag || NULL == textureBomb) {
-        fprintf(stderr, "Erreur SDL_CreateTexture : %s", SDL_GetError());
-        goto Quit;
+    SDL_Texture* textures[11];
+    textures[0] = SDL_CreateTextureFromSurface(renderer, image0);
+    textures[1] = SDL_CreateTextureFromSurface(renderer, image1);
+    textures[2] = SDL_CreateTextureFromSurface(renderer, image2);
+    textures[3] = SDL_CreateTextureFromSurface(renderer, image3);
+    textures[4] = SDL_CreateTextureFromSurface(renderer, image4);
+    textures[5] = SDL_CreateTextureFromSurface(renderer, image5);
+    textures[6] = SDL_CreateTextureFromSurface(renderer, image6);
+    textures[7] = SDL_CreateTextureFromSurface(renderer, image7);
+    textures[8] = SDL_CreateTextureFromSurface(renderer, image8);
+    textures[9] = SDL_CreateTextureFromSurface(renderer, imageFlag);
+    textures[10] = SDL_CreateTextureFromSurface(renderer, imageBomb);
+    for (int i = 0; i <= 10; i++) {
+        if (textures[i] == NULL) {
+            fprintf(stderr, "Erreur SDL_CreateTexture : %s", SDL_GetError());
+        }
     }
-    while (!quit)
-        {
-        SDL_RenderClear(renderer);
-        SDL_PumpEvents();
-
-        boutons = SDL_GetMouseState(&x, &y);
-        clavier = SDL_GetKeyboardState(NULL);
-
-        // background
-        setWindowColor(renderer, orange);
-
-        graphiqueGrid(renderer);
-
-        while (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_QUIT || clavier[SDL_SCANCODE_ESCAPE] || clavier[SDL_SCANCODE_RETURN])
-                quit = SDL_TRUE;
-            else if (event.type == SDL_MOUSEBUTTONUP)
-            {
-                if (boutons & SDL_BUTTON(SDL_BUTTON_RIGHT))
-                {
-                    printf("Clic droit a la positions %d - %d\n", x, y );
-                    //graphiqueLink(tableauJeu, indice, renderer, caseFile, x, y, texture0, texture1, texture2, texture3, texture4, texture5, texture6, texture7, texture8, textureBomb, textureFlag);
-                }
-                else if (boutons & SDL_BUTTON(SDL_BUTTON_LEFT))
-                {
-                    printf("Clic gauche a la positions %d - %d\n", x, y);
-                    changeTexture(renderer, texture1, x, y, &caseFile);
-                }
-                graphiqueIndice(x , y , &caseFile);
-               // changeTexture(renderer, texture, x - GAP_X, y - GAP_Y);
-            }
-            SDL_RenderPresent(renderer);
-        }
-        
-        }
-
-    statut = EXIT_SUCCESS;
-
-    //SDL_Rect dst = { 0, 0, 50, 50 };
-    //SDL_RenderCopy(renderer, texture, NULL, &dst);
-
-Quit:
-    if (NULL != texture)
-        SDL_DestroyTexture(texture);
-    if (NULL != renderer)
-        SDL_DestroyRenderer(renderer);
-    if (NULL != window)
-        SDL_DestroyWindow(window);
-    SDL_Quit();
-    return statut;
-
-    return 0;
+    gameGraphique(tableauJeu, tableauReveal, nbBombe, indice, renderer, textures, &pos);
 }
 
-int main2()
+int main()
 {
     //Jeu
     while (1) {
@@ -883,15 +929,20 @@ int main2()
         int nbBombe = difficulty(DIFFICULTY);
         int nbFlag = nbBombe;
 
+
             Case* tableauJeu = malloc(sizeof(Case) * (LIGNE * COLONNE));
             Case* tableauReveal = malloc(sizeof(Case) * (LIGNE * COLONNE));
 
 
             initGrid(tableauJeu);
-
-            game(tableauJeu, tableauReveal, nbBombe, &coordonneesX, &coordonneesY);
-
-            
+            if (GRAPH == 'c')
+            {
+				game(tableauJeu, tableauReveal, nbBombe, &coordonneesX, &coordonneesY);
+            }
+            else
+            {
+                SDL(tableauJeu, tableauReveal, nbBombe);
+            }   
 
 
             free(tableauJeu); //libère la mémoire
@@ -907,56 +958,3 @@ int main2()
     }
 };
 
-/* a faire */
-
-// interface graphique
-
-void looseRevealGraphique(Case* tableauReveal, int indice, SDL_Renderer* renderer, SDL_Rect* caseFile, int x, int y, SDL_Texture* texture0, SDL_Texture* texture1,
-	SDL_Texture* texture2, SDL_Texture* texture3, SDL_Texture* texture4, SDL_Texture* texture5, SDL_Texture* texture6, SDL_Texture* texture7, SDL_Texture* texture8,
-	SDL_Texture* textureBomb, SDL_Texture* textureFlag)
-{
-	//Permet d'afficher le tableau généré avec tout de révélé
-
-	for (int i = 0; i < LIGNE; i++)
-	{
-		for (int y = 0; y < COLONNE; y++)
-		{
-			if (tableauReveal[getIndex1D(i, y)].statut == 0 && tableauReveal[getIndex1D(i, y)].symbol == '?')
-			{
-				tableauReveal[getIndex1D(i, y)].statut = 1;
-			};
-			graphiqueLink(tableauReveal, getIndex1D(i, y), renderer, caseFile, x, y, texture0, texture1, texture2, texture3, texture4, texture5, texture6, texture7, texture8, textureBomb, textureFlag);
-		};
-	}
-};
-
-
-void displayGraphique(Case* tableauJeu, int indice, SDL_Renderer* renderer, SDL_Rect* caseFile, int x, int y, SDL_Texture* texture0, SDL_Texture* texture1,
-    SDL_Texture* texture2, SDL_Texture* texture3, SDL_Texture* texture4, SDL_Texture* texture5, SDL_Texture* texture6, SDL_Texture* texture7, SDL_Texture* texture8,
-    SDL_Texture* textureBomb, SDL_Texture* textureFlag)
-{
-	//Permet d'afficher les grilles du démineur
-
-	// print ligne
-	for (int i = 0; i < LIGNE; i++)
-	{
-		for (int y = 0; y < COLONNE; y++)
-		{
-
-			if (tableauJeu[getIndex1D(i, y)].statut == 1)
-			{
-                if (tableauJeu[getIndex1D(i, y)].number == 0)
-                {
-					changeTextureChoice(renderer, textureBomb, x, y, &caseFile, 165, 42, 42, 255 );
-                }
-                else {
-					graphiqueLink(tableauJeu, getIndex1D(i, y), renderer, caseFile, x, y, texture0, texture1, texture2, texture3, texture4, texture5, texture6, texture7, texture8, textureBomb, textureFlag);
-                }
-			}
-			else
-			{
-				changeTexture(renderer, textureBomb, x, y, &caseFile);
-			};
-		};
-	}
-};
