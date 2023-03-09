@@ -716,6 +716,8 @@ void displayGraphique(Case* tableauJeu, SDL_Renderer* renderer, SDL_Texture* tex
 		for (int j = 0; j < COLONNE; j++)
 		{
 			getGraphiquePos(i, j, &pos);
+            printf("x %d\n", pos.x);
+			printf("y %d\n", pos.y);
 
             int indice = getIndex1D(i, j);
 
