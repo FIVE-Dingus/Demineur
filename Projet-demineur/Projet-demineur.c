@@ -723,10 +723,13 @@ void displayGraphique(Case* tableauJeu, SDL_Renderer* renderer, SDL_Texture* tex
 
 			if (tableauJeu[indice].statut == 1)
 			{
-				if (tableauJeu[indice].number != -1)
+				if (tableauJeu[indice].number == 0)
 				{
 					textureChoice(tableauJeu, indice, renderer, &pos, textures);
 					drawColorRect(renderer, textures, &pos, 0, 42, 42, 255); // rectangle couleur marron
+				}
+				else {
+					textureChoice(tableauJeu, indice, renderer, &pos, textures);
 				}
 			}
 			else
