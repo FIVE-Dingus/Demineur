@@ -754,6 +754,7 @@ void gameGraphique(Case* tableauJeu, Case* tableauReveal, int nbBombe, SDL_Rende
 
 		while (SDL_PollEvent(&event))
 		{
+			displayGraphique(tableauJeu, renderer, textures);
 			if (event.type == SDL_MOUSEBUTTONDOWN)
 			{
                 int x, y;
@@ -815,7 +816,7 @@ void gameGraphique(Case* tableauJeu, Case* tableauReveal, int nbBombe, SDL_Rende
 				}
 			}
 
-			displayGraphique(tableauJeu, renderer, textures);
+			
 			SDL_RenderPresent(renderer);
 		}
 	}
