@@ -749,6 +749,7 @@ void gameGraphique(Case* tableauJeu, Case* tableauReveal, int nbBombe, SDL_Rende
 	int ligne = 0;
 	int colonne = 0;
     SDL_Event event;
+
     SDL_Rect rect_case;
 	while (gagnant == 0) {
 
@@ -833,6 +834,7 @@ void SDL(Case * tableauJeu , Case * tableauReveal, int nbBombe)
     Uint8* clavier;
     SDL_bool quit = SDL_FALSE;
     SDL_Color gray = { 100, 100, 100, 255 };
+    
 	SDL_Rect pos;
     SDL_Renderer* renderer = NULL;
     int indice = 0;
@@ -860,6 +862,9 @@ void SDL(Case * tableauJeu , Case * tableauReveal, int nbBombe)
 
     int heigth = 50;
     int length = 50;
+
+    // background 
+ 
 
     /* Initialisation, création de la fenêtre et du renderer. */
     if (0 != SDL_Init(SDL_INIT_VIDEO))
