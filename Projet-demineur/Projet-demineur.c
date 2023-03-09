@@ -623,7 +623,7 @@ int positionPossible(int x, int y)
     };
 }
 
-int getGraphiqueIIndice(int x, int y)
+int getGraphiqueIndice(int x, int y)
 {
 	int indiceColonne;
 	int indiceLigne;
@@ -723,13 +723,10 @@ void displayGraphique(Case* tableauJeu, SDL_Renderer* renderer, SDL_Texture* tex
 
 			if (tableauJeu[indice].statut == 1)
 			{
-				if (tableauJeu[indice].number == 0)
+				if (tableauJeu[indice].number != -1)
 				{
 					textureChoice(tableauJeu, indice, renderer, &pos, textures);
-					drawColorRect(renderer, textures, &pos, 165, 42, 42, 255); // rectangle couleur marron
-				}
-				else {
-					textureChoice(tableauJeu, indice, renderer, &pos, textures);
+					drawColorRect(renderer, textures, &pos, 0, 42, 42, 255); // rectangle couleur marron
 				}
 			}
 			else
@@ -759,7 +756,7 @@ void gameGraphique(Case* tableauJeu, Case* tableauReveal, int nbBombe, SDL_Rende
 			{
                 int x, y;
 				Uint32 boutons = SDL_GetMouseState(&x, &y);
-                int indice = getGraphiqueIIndice(x, y, &rect_case);
+                int indice = getGraphiqueIndice(x, y, &rect_case);
 
 				if (indice != -1 && boutons & SDL_BUTTON(SDL_BUTTON_RIGHT))
 				{
@@ -797,10 +794,10 @@ void gameGraphique(Case* tableauJeu, Case* tableauReveal, int nbBombe, SDL_Rende
 					}
 					else
 					{
-						if (tableauJeu[getIndex1D(x, y)].statut == 0)
+						if (tableauJeu[indice].statut == 0)
 						{
-							tableauJeu[getIndex1D(x, y)].statut = 1;
-							if (tableauJeu[getIndex1D(x, y)].number == -1)
+							tableauJeu[indice].statut = 1;
+							if (tableauJeu[indice].number == -1)
 							{
 								looseRevealGraphique(tableauReveal, renderer, textures);
 								printf("Vous avez perdu bande de noobz\n\n");
