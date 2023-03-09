@@ -11,8 +11,6 @@ int max(int a, int b) { return (a < b) ? b : a; }
 #include <windows.h>
 #include <ctype.h>
 
-int GAP_X = 50;
-int GAP_Y = 50;
 #define HEIGHT 50
 #define WIDTH 50
 
@@ -584,12 +582,12 @@ void drawRect(SDL_Renderer* renderer, SDL_Rect* dst, int r, int g, int b, int al
 void graphiqueInitGrid(SDL_Window* renderer)
 {
     // init grille
-    int col = GAP_X;
-    int lign = GAP_Y;
+    int col = 0;
+    int lign = 0;
     int count = 0;
     for (int i = 0; i < LIGNE; i++)
     {
-        col = 50;
+        col = 0;
         for (int j = 0; j < COLONNE; j++)
         {
 			SDL_Rect rect = { col, lign, 50, 50 };
@@ -613,9 +611,9 @@ void graphiqueInitGrid(SDL_Window* renderer)
 int positionPossible(int x, int y)
 {
 
-    if (x >= GAP_X && x < (WIDTH * LIGNE) + GAP_X )
+    if (x >= 0 && x < (WIDTH * LIGNE))
     {
-        if (y >= GAP_Y && y < (HEIGHT * COLONNE) + GAP_Y)
+        if (y >= 0 && y < (HEIGHT * COLONNE))
         {
             return 1;
         }
@@ -857,14 +855,9 @@ void SDL(Case * tableauJeu , Case * tableauReveal, int nbBombe)
     int x, y;
     Uint32 boutons;
 
-    int sizeX = (COLONNE * 50) + (2 * GAP_X);
-    int sizeY = (LIGNE * 50) + (2 * GAP_Y);
-
-    int heigth = 50;
+    int sizeX = (COLONNE * 50) ;
+    int sizeY = (LIGNE * 50);
     int length = 50;
-
-    // background 
- 
 
     /* Initialisation, création de la fenêtre et du renderer. */
     if (0 != SDL_Init(SDL_INIT_VIDEO))
